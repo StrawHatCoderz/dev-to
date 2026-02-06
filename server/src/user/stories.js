@@ -1,12 +1,18 @@
-const isIdExistInTheSession = (id, users) => {
+export const isIdExistInTheSession = (id, users) => {
   return users.includes(id);
+};
+
+export const retrieveUserDetails = (id, users) => {
+  return users.find((user) => user.id === id);
 };
 
 export const getStoriesHandler = (id, session, users) => {
   if (!isIdExistInTheSession(id, session.users)) {
-    return { error: true, errMsg: "id does not exist in the session" };
+    return { success: true, status : 401 };
   }
-  return { error : false}
+
+  const user = retrieveUserDetails(id, users);
+  return { success: true, user: user.stories , status : 200};
 };
 
 /*
