@@ -1,6 +1,6 @@
 import { assertEquals } from '@std/assert';
 import { beforeEach, describe, it } from '@std/testing/bdd';
-import { getUserFolllowers } from '../../src/user/followers.js';
+import { getUserFollowers } from '../../src/user/followers.js';
 
 describe('user followers tests', () => {
 	let mockUsers;
@@ -24,9 +24,10 @@ describe('user followers tests', () => {
 			users: [],
 		};
 
-		const { status, sucuess } = getUserFolllowers(1, mockUsers, mockSession);
+		const { status, success } = getUserFollowers(1, mockUsers, mockSession);
+
 		assertEquals(status, 401);
-		assertEquals(sucuess, false);
+		assertEquals(success, false);
 	});
 
 	it(' => should return all followers for authorized user', () => {
@@ -34,12 +35,13 @@ describe('user followers tests', () => {
 			users: [1],
 		};
 
-		const { followers, sucuess, status } = getUserFolllowers(
+		const { followers, success, status } = getUserFollowers(
 			1,
 			mockUsers,
 			mockSession,
 		);
-		assertEquals(sucuess, true);
+
+		assertEquals(success, true);
 		assertEquals(status, 200);
 		assertEquals(followers, []);
 	});
