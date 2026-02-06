@@ -111,3 +111,27 @@ database implementation
 - content: string
 - user id (who commented): integer
 - commented on: timestamp
+
+# Handlers
+
+- [ ] user
+  - [ ] createUser
+  - [ ] getUser
+  - [ ] deleteUser
+
+- [ ] story
+  - [ ] createStory
+  - [ ] getStory
+  - [x] deleteStory
+  - [ ] getStories
+
+- [ ] drafts
+  - [ ] createDraft
+  - [ ] getDraft
+  - [x] deleteDraft
+  - [ ] updateDraft
+  - [ ] getDrafts
+
+- [x] comments
+  - [x] addComment
+  - [x] getComments
