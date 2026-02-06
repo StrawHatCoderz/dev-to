@@ -7,6 +7,7 @@
     "jsr:@std/fs@^1.0.22": "1.0.22",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/path@^1.1.4": "1.1.4",
+    "jsr:@std/testing@*": "1.0.17",
     "jsr:@std/testing@^1.0.17": "1.0.17"
   },
   "jsr": {
