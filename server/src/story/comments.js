@@ -14,9 +14,9 @@ export const addComment = (content, storyId, comments, userId) => {
   return { success: true, status: 200, id: comment.id };
 };
 
-export const getComments = (fetchStoryId, comments) => {
-  const storyComments = comments.filter(({ storyId }) =>
-    storyId === fetchStoryId
+export const getComments = (storyId, comments) => {
+  const storyComments = comments.filter(({ storyId: currentStoryId }) =>
+    currentStoryId === storyId
   );
 
   if (storyComments.length === 0) {
