@@ -40,7 +40,7 @@ describe('tests for login functionality', () => {
 			const userId = getUserId('deadpool', mockUsers);
 			assertEquals(userId, 1);
 		});
-		it("when user doesn't have accout", () => {
+		it("when user doesn't have account", () => {
 			const userId = getUserId('imNotUser', mockUsers);
 			assertEquals(userId, -1);
 		});

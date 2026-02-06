@@ -14,23 +14,21 @@ stories: { drafts: [], published: [], }, },
 ````
 stories : {
   drafts : [{
-    id : 1,
-    title : abc title, 
+    title : abc title,
     storyContent : abcd content
     authorId : 1,
     claps : [],
     comments: []
-  }], 
+  }],
   published : [
     {
-    id : 1,
-    title : abc title, 
+    title : abc title,
     storyContent : abcd content
     authorId : 1,
     claps : [],
     comments: []
   }
-    
+
   ]
 }
 ````
@@ -47,7 +45,7 @@ comments : [{
 ]
 
 ````
-## claps structure should be 
+## claps structure should be
 
 claps : [{
   clapId :

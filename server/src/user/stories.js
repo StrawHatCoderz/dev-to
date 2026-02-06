@@ -8,7 +8,7 @@ export const retrieveUserDetails = (id, users) => {
 
 export const getStoriesHandler = (id, session, users) => {
   if (!isIdExistInTheSession(id, session.users)) {
-    return { success: true, status : 401 };
+    return { success: false, status : 401 };
   }
 
   const user = retrieveUserDetails(id, users);
