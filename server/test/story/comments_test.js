@@ -6,7 +6,7 @@ describe("story comments", () => {
   describe("addComment", () => {
     let mockComments;
     beforeEach(() => mockComments = []);
-    
+
     it("comment content is not present", () => {
       const { success, status } = addComment("", 1, mockComments, 1);
       assertEquals(success, false);
@@ -68,7 +68,7 @@ describe("story comments", () => {
       const mockComments = [];
       addComment("comment 1", 1, mockComments, 1);
       addComment("comment 2", 1, mockComments, 1);
-  
+
       const { success, status, comments } = getComments(1, mockComments);
       assertEquals(success, true);
       assertEquals(status, 200);
