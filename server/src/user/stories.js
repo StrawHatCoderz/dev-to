@@ -1,11 +1,18 @@
-const isIdExistInTheSession = (id, session) => {
-  return id in session;
-}
+export const isIdExistInTheSession = (id, users) => {
+  return users.includes(id);
+};
+
+export const retrieveUserDetails = (id, users) => {
+  return users.find((user) => user.id === id);
+};
 
 export const getStoriesHandler = (id, session, users) => {
-  if (isIdExistInTheSession(id, session)) {
-    return { error: true, errMsg: "id does not exist in the session" };
+  if (!isIdExistInTheSession(id, session.users)) {
+    return { success: true, status : 401 };
   }
+
+  const user = retrieveUserDetails(id, users);
+  return { success: true, user: user.stories , status : 200};
 };
 
 /*
@@ -14,4 +21,7 @@ request contain the user id
 check the id is present in session
 if not send id not exist in the session
 if it is there then send the stories as response
+
+session : {
+users : []}
 */
