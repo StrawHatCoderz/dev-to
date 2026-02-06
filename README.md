@@ -14,18 +14,18 @@ stories: { drafts: [], published: [], }, },
 ````
 stories : {
   drafts : [{
+    id : 1,
     title : abc title, 
     storyContent : abcd content
-    storyId : 1,
     authorId : 1,
     claps : [],
     comments: []
   }], 
   published : [
     {
+    id : 1,
     title : abc title, 
     storyContent : abcd content
-    storyId : 1,
     authorId : 1,
     claps : [],
     comments: []

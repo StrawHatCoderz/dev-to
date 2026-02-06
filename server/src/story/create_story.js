@@ -1,36 +1,37 @@
 // stories : {
 //   drafts : [{
-//     title : abc title, 
+//     title : abc title,
 //     storyContent : abcd content
 //     storyId : 1,
 //     authorId : 1,
 //     claps : 10,
 //     comments: []
 //   }]
-// } 
-
+// }
 
 export const createStory = (title, content, id, authorId) => {
   return {
     id,
     title,
-    content, 
+    content,
     authorId,
     claps: [],
-    comments : []
-  }
-}
+    comments: [],
+  };
+};
 
-let storyId = 0;
-
-export const createStoryHandler = (title, content, authorId, stories, isDraft) => {
+export const createStoryHandler = (storyToCreate, stories, isDraft) => {
+  const { title, content, authorId } = storyToCreate;
   const isValidContent = ![content.trim().length, title.trim().length].includes(0);
+
   if (!isValidContent) {
     return { success: false, status: 400 };
   }
 
-  const story = createStory(title, content, ++storyId, authorId);
-  (isDraft) ? stories.drafts.push(story) : stories.published.push(story);
+  const id = (isDraft) ? stories.drafts.length + 1 : stories.published.length + 1;
+
+  const story = createStory(title, content, id, authorId);
+  isDraft ? stories.drafts.push(story) : stories.published.push(story);
 
   return { success: true, status: 200 };
-}
+};
