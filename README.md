@@ -61,7 +61,7 @@ database implementation
 
 # user
 
-- id: interger pk serial
+- id: integer pk serial
 - name: string not null unique
 - created on: timestamp
 
@@ -77,8 +77,8 @@ database implementation
 
 - draft id: integer
 - title: string unique
-- content: stirng
-- author id: interger
+- content: string
+- author id: integer
 - created on: timestamp
 - updated on: timestamp
 
@@ -87,11 +87,11 @@ database implementation
 - follower id (pk) : integer
 - userId: integer
 - follower (integer): integer
-- crearted on: timestamp
+- created on: timestamp
 
-# follwing
+# following
 
-- follwing id (pk): integer
+- following id (pk): integer
 - user id: integer
 - following user id: integer
 - created on:timestamp
