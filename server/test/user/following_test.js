@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assertEquals } from "@std/assert";
-import { getUsersFollowing } from "./user/following_test.js";
+import { getUsersFollowing } from "../../src/user/following.js";
 
 describe("users following test", () => {
   let mockUsers;
