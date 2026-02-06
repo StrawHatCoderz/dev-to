@@ -12,20 +12,20 @@ const mockUsers = [
 			published: [],
 		},
 	},
-	
+
 ];
 
 ## story structure should be :
 stories : {
   drafts : [{
-    title : abc title, 
+    title : abc title,
     storyContent : abcd content
     storyId : 1,
     authorId : 1,
     claps : 10,
     comments: []
   }]
-} 
+}
 
 ## comments structure should be:
 comments : [{
