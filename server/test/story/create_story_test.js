@@ -1,11 +1,10 @@
 import { assertEquals } from '@std/assert';
-import { beforeEach, describe, it } from 'jsr:@std/testing/bdd';
+import { describe, it } from 'jsr:@std/testing/bdd';
 import { createStory, createStoryHandler } from "../../src/story/create_story.js";
 
 
-
 describe("create story tests ", () => {
-  it("==>should return all story deatails", () => {
+  it(" => should return all story deatails", () => {
     const expectedStory = {
       title: "title",
       content: "content",
@@ -17,7 +16,7 @@ describe("create story tests ", () => {
     const story = createStory("title", "content", 1, 1);
     assertEquals(story, expectedStory)
   })
-  it("==>should return error if there is no content [drafts] ", () => {
+  it(" => should return error if there is no content [drafts] ", () => {
     const mockStories = { drafts: [], published: [] };
     const storyToCreate = {title : "title",content: " ",authorId: 1}
     const response = createStoryHandler(storyToCreate, mockStories, true)
@@ -26,7 +25,7 @@ describe("create story tests ", () => {
     assertEquals(mockStories.drafts.length, 0);
 
   })
-  it("==>should not return error if there is content [drafts]", () => {
+  it(" => should not return error if there is content [drafts]", () => {
     const mockStories = { drafts: [], published: [] };
     const storyToCreate = {title : "title",content: "content",authorId: 1}
     const response = createStoryHandler(storyToCreate, mockStories, true)
@@ -34,7 +33,7 @@ describe("create story tests ", () => {
     assertEquals(response.status, 200);
     assertEquals(mockStories.drafts.length, 1);
   })
-  it("==>should return error if there is no content [published]", () => {
+  it(" => should return error if there is no content [published]", () => {
     const mockStories = { drafts: [], published: [] };
     const storyToCreate = {title : "title",content: " ",authorId: 1}
     const response = createStoryHandler(storyToCreate, mockStories, false)
@@ -43,7 +42,7 @@ describe("create story tests ", () => {
     assertEquals(mockStories.published.length, 0);
 
   })
-  it("==>should not return error if there is content [published]", () => {
+  it(" => should not return error if there is content [published]", () => {
     const mockStories = { drafts: [], published: [] };
     const storyToCreate = {title : "title",content: "content",authorId: 1}
     const response = createStoryHandler(storyToCreate, mockStories, false)

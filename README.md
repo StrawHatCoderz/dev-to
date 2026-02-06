@@ -2,40 +2,38 @@
 
 ## user structure
 
-````
-const mockUsers = [ { id: 1, name: 'deadpool', followers: [], following: [],
-stories: { drafts: [], published: [], }, },
-
+```
+const mockUsers = [
+   { id: 1, name: 'deadpool', followers: [], following: [],}
 ];
-````
+```
+
+drafts: [], stories: []
 
 ## story structure should be :
 
-````
-stories : {
-  drafts : [{
-    title : abc title,
-    storyContent : abcd content
-    authorId : 1,
-    claps : [],
-    comments: []
-  }],
-  published : [
-    {
-    title : abc title,
-    storyContent : abcd content
-    authorId : 1,
-    claps : [],
-    comments: []
-  }
+```
+drafts = [{
+  title : abc title,
+  storyContent : abcd content
+  authorId : 1
+}]
+
+published = [
+  {
+  title : abc title,
+  storyContent : abcd content
+  authorId : 1,
+  claps : [],
+  comments: []
+}
 
   ]
-}
-````
+```
 
 ## comments structure should be:
 
-````
+```
 comments : [{
   id:
   content:
@@ -43,12 +41,8 @@ comments : [{
   userId://id to know who commented
 }
 ]
+```
 
-````
 ## claps structure should be
 
-claps : [{
-  clapId :
-  clappedBy:
-  storyId
-}]
+claps : [{ clapId : clappedBy: storyId }]
