@@ -2,17 +2,22 @@ export const isIdExistInTheSession = (id, users) => {
   return users.includes(id);
 };
 
-export const retrieveUserDetails = (id, users) => {
-  return users.find((user) => user.id === id);
-};
-
-export const getStoriesHandler = (id, session, users) => {
-  if (!isIdExistInTheSession(id, session.users)) {
-    return { success: false, status : 401 };
+export const retrieveStoriesById = (id, allStories) => {
+  const stories = [];
+  for (const story of allStories) {
+    if (story.userId === id) stories.push(story);
   }
 
-  const user = retrieveUserDetails(id, users);
-  return { success: true, user: user.stories , status : 200};
+  return stories;
+};
+
+export const getStoriesHandler = (id, session, allStories) => {
+  if (!isIdExistInTheSession(id, session.users)) {
+    return { success: false, status: 401 };
+  }
+
+  const stories = retrieveStoriesById(id, allStories);
+  return { success: true, stories, status: 200 };
 };
 
 /*
@@ -25,3 +30,7 @@ if it is there then send the stories as response
 session : {
 users : []}
 */
+
+// users = { id , name }
+// stories = []
+// drafts = []
