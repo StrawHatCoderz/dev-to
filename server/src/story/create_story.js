@@ -12,15 +12,15 @@
 export const createStory = (title, content, id, authorId) => {
   return {
     id,
+    authorId,
     title,
     content,
-    authorId,
     claps: [],
     comments: [],
   };
 };
 
-export const createStoryHandler = (storyToCreate, stories, isDraft) => {
+export const createStoryHandler = (storyToCreate, stories) => {
   const { title, content, authorId } = storyToCreate;
   const isValidContent = ![content.trim().length, title.trim().length].includes(0);
 
@@ -28,10 +28,10 @@ export const createStoryHandler = (storyToCreate, stories, isDraft) => {
     return { success: false, status: 400 };
   }
 
-  const id = (isDraft) ? stories.drafts.length + 1 : stories.published.length + 1;
+  const id = stories.length + 1;
 
   const story = createStory(title, content, id, authorId);
-  isDraft ? stories.drafts.push(story) : stories.published.push(story);
+  stories.push(story);
 
   return { success: true, status: 200 };
 };

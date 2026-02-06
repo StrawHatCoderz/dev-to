@@ -12,6 +12,6 @@ export const loginHandler = (username, users, session) => {
   if (!doesUserHaveAccount) {
     return { success: false, status: 401 };
   }
-  session.users.push(userId);
+  session.push({ userId });
   return { success: true, status: 200 };
 };
