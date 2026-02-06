@@ -1,5 +1,5 @@
 export const isIdExistInTheSession = (id, users) => {
-  return users.includes(id);
+  return users.some((user) => user.id === id);
 };
 
 export const retrieveStoriesById = (id, allStories) => {
@@ -12,7 +12,7 @@ export const retrieveStoriesById = (id, allStories) => {
 };
 
 export const getStoriesHandler = (id, session, allStories) => {
-  if (!isIdExistInTheSession(id, session.users)) {
+  if (!isIdExistInTheSession(id, session)) {
     return { success: false, status: 401 };
   }
 

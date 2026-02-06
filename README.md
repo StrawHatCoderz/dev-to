@@ -110,3 +110,6 @@ database implementation
 - content: string
 - user id (who commented): integer
 - commented on: timestamp
+
+# session
+- user id : 
