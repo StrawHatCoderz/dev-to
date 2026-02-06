@@ -1,33 +1,43 @@
 # dev-to
 
 ## user structure
-const mockUsers = [
-	{
-		id: 1,
-		name: 'deadpool',
-		followers: [],
-		following: [],
-		stories: {
-			drafts: [],
-			published: [],
-		},
-	},
-	
+
+````
+const mockUsers = [ { id: 1, name: 'deadpool', followers: [], following: [],
+stories: { drafts: [], published: [], }, },
+
 ];
+````
 
 ## story structure should be :
+
+````
 stories : {
   drafts : [{
-    title : abc title, 
+    title : abc title,
     storyContent : abcd content
     storyId : 1,
     authorId : 1,
-    claps : 10,
+    claps : [],
     comments: []
-  }]
-} 
+  }],
+  published : [
+    {
+    title : abc title,
+    storyContent : abcd content
+    storyId : 1,
+    authorId : 1,
+    claps : [],
+    comments: []
+  }
+
+  ]
+}
+````
 
 ## comments structure should be:
+
+````
 comments : [{
   id:
   content:
@@ -36,3 +46,11 @@ comments : [{
 }
 ]
 
+````
+## claps structure should be
+
+claps : [{
+  clapId :
+  clappedBy:
+  storyId
+}]
