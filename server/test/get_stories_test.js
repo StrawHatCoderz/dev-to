@@ -19,13 +19,6 @@ describe("testing the get stories functionality : ", () => {
       const expected = true;
       assertEquals(actual, expected);
     });
-
-    it("providing an user id , where user does not exist in the session: ", () => {
-      const actual = getStoriesHandler(2, { users: [1] }, []);
-      const expected = true;
-      assertEquals(actual.success, expected);
-      assertEquals(actual.status, 401);
-    });
   });
 
   describe("testing the retrieve user functionality : ", () => {
@@ -54,6 +47,34 @@ describe("testing the get stories functionality : ", () => {
       };
       const actual = retrieveUserDetails(1, users);
       assertEquals(actual, expected);
+    });
+  });
+
+  describe("get handler functions : ", () => {
+    it("providing an user id , where user does not exist in the session: ", () => {
+      const actual = getStoriesHandler(2, { users: [1] }, []);
+      const expected = true;
+      assertEquals(actual.success, expected);
+      assertEquals(actual.status, 401);
+    });
+
+    it("providing an id which exist in the session  , retrieving the user details : ", () => {
+      const users = [
+        {
+          id: 1,
+          name: "deadpool",
+          followers: [],
+          following: [],
+          stories: {
+            drafts: [],
+            published: [],
+          },
+        },
+      ];
+      const actual = getStoriesHandler(1, { users: [1] }, users);
+      assertEquals(actual.success, true);
+      assertEquals(actual.status, 200);
+      assertEquals(actual.user, { drafts: [], published: [] })
     });
   });
 });
