@@ -19,7 +19,7 @@ describe('user followers tests', () => {
 		];
 	});
 
-	it('should return error when user is not authorized', () => {
+	it(' => should return error when user is not authorized', () => {
 		const mockSession = {
 			users: [],
 		};
@@ -29,7 +29,7 @@ describe('user followers tests', () => {
 		assertEquals(sucuess, false);
 	});
 
-	it('should return all followers for authorized user', () => {
+	it(' => should return all followers for authorized user', () => {
 		const mockSession = {
 			users: [1],
 		};
