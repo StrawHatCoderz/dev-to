@@ -14,6 +14,7 @@ drafts: [], stories: []
 
 ```
 drafts = [{
+  draftId
   title : abc title,
   storyContent : abcd content
   authorId : 1

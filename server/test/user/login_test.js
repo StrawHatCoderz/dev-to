@@ -28,7 +28,7 @@ describe('tests for login functionality', () => {
 			assertEquals(response.status, 200);
 		});
 	});
-	describe.ignore('tests for get user id helper function', () => {
+	describe('tests for get user id helper function', () => {
 		it('user id is present in users', () => {
 			const userId = getUserId('deadpool', mockUsers);
 			assertEquals(userId, 1);
