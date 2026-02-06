@@ -53,7 +53,7 @@ describe('testing the get stories functionality : ', () => {
 	describe('get handler functions : ', () => {
 		it('providing an user id , where user does not exist in the session: ', () => {
 			const actual = getStoriesHandler(2, { users: [1] }, []);
-			const expected = true;
+			const expected = false;
 			assertEquals(actual.success, expected);
 			assertEquals(actual.status, 401);
 		});
