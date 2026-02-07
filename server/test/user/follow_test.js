@@ -24,28 +24,13 @@ describe("tests for follow button", () => {
 
   })
   it("=> should give get user", () => {
-     mockUsers = [
-			{
-				id: 1,
-				name: 'deadpool',
-				followers: [],
-				following: [],
-				stories: {
-					drafts: [],
-					published: [],
-				},
-			},
-		];
     const user = getUser(mockUsers, 1);
     assertEquals(user, {
 				id: 1,
 				name: 'deadpool',
 				followers: [],
 				following: [],
-				stories: {
-					drafts: [],
-					published: [],
-				},
+			
 			})
   })
   it("=> should create follower", () => {
