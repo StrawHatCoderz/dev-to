@@ -25,3 +25,4 @@ export const logout = (userId, currentSession) => {
 export const getEveryStory = (stories) => {
 	return stories;
 }
+

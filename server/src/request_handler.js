@@ -1,5 +1,5 @@
-import { getRequestHandler } from "./get_handler.js";
-import { postRequestHandler } from "./post_handler.js";
+import { getRequestHandler } from "./handle_user_requests.js";
+import { postRequestHandler } from "./handle_story_requests.js";
 
 const methods = {
   GET: getRequestHandler,
