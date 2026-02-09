@@ -87,7 +87,7 @@ database implementation
 
 - follower id (pk) : integer
 - userId: integer
-- follower (integer): integer
+- follower user id(integer): integer
 - created on: timestamp
 
 # following
