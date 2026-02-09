@@ -30,7 +30,7 @@ export const logout = (userId, currentSession) => {
 	return { success: true, status: 200 };
 };
 
-export const getAllStories = (userId, currentSession, stories) => {
+export const getEveryStory = (userId, currentSession, stories) => {
 	if (!isAuthorized(userId, currentSession)) {
 		return { success: false, status: 401 };
 	}
