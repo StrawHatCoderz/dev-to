@@ -10,7 +10,7 @@ const mockUsers = [
 
 drafts: [], stories: []
 
-## story structure should be :
+## stories/drafts structure should be :
 
 ```
 drafts = [{
@@ -20,7 +20,7 @@ drafts = [{
   authorId : 1
 }]
 
-published = [
+stories = [
   {
   title : abc title,
   storyContent : abcd content
@@ -142,3 +142,15 @@ database implementation
 - [x] comments
   - [x] addComment
   - [x] getComments
+
+
+## server
+
+POST  /login => login handlers/login
+POST /logout => login handlers/logout // but we don't send any data through post
+
+GET dashboard => common handlers/ stories of all users
+GET story/id => story handler/ get story
+POST story/clap/id => story handler / toggle clap
+
+

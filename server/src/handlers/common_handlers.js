@@ -21,3 +21,8 @@ export const logout = (userId, currentSession) => {
 	currentSession.users.splice(indexOfUserId, 1);
 	return { success: true, status: 200 };
 };
+
+export const getEveryStory = (stories) => {
+	return stories;
+}
+
