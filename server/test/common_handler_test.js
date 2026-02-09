@@ -1,6 +1,10 @@
 import { assertEquals } from '@std/assert/equals';
 import { beforeEach, describe, it } from '@std/testing/bdd';
-import { login, logout } from '../src/handlers/common_handlers.js';
+import {
+	getAllStories,
+	login,
+	logout,
+} from '../src/handlers/common_handlers.js';
 
 describe('common handlers', () => {
 	let mockUsers;
@@ -8,7 +12,7 @@ describe('common handlers', () => {
 		mockUsers = [
 			{
 				id: 1,
-				name: 'deadpool',
+				username: 'deadpool',
 				followers: [],
 				following: [],
 			},
@@ -17,18 +21,23 @@ describe('common handlers', () => {
 
 	describe('login test cases', () => {
 		it(" => should fail when user doesn't have account", () => {
-			const session = [];
-			const response = login('notAnUser', mockUsers, session);
+			const session = { users: [] };
+
+			const response = login('invalid user', mockUsers, session);
+
 			assertEquals(response.success, false);
 			assertEquals(response.status, 401);
-			assertEquals(session.length, 0);
+			assertEquals(session.users.length, 0);
 		});
 
 		it(' => should login sucuessfully', () => {
-			const session = { users: [1] };
+			const session = { users: [] };
+
 			const response = login('deadpool', mockUsers, session);
+
 			assertEquals(response.success, true);
 			assertEquals(response.status, 200);
+			assertEquals(session.users.length, 1);
 		});
 	});
 
@@ -52,6 +61,33 @@ describe('common handlers', () => {
 			assertEquals(response.success, true);
 			assertEquals(response.status, 200);
 			assertEquals(mockSession.users.length, 0);
+		});
+	});
+
+	describe('stories test cases', () => {
+		it(' => should fail with unauthorized user', () => {
+			const mockSession = {
+				users: [],
+			};
+			const mockStories = [{ id: 1, title: 'title' }];
+
+			const response = getAllStories(1, mockSession, mockStories);
+
+			assertEquals(response.success, false);
+			assertEquals(response.status, 401);
+		});
+
+		it(' => should return all stories', () => {
+			const mockSession = {
+				users: [1],
+			};
+			const mockStories = [{ id: 1, title: 'title' }];
+
+			const response = getAllStories(1, mockSession, mockStories);
+
+			assertEquals(response.success, true);
+			assertEquals(response.status, 200);
+			assertEquals(response.stories.length, 1);
 		});
 	});
 });

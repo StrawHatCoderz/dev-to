@@ -1,12 +1,17 @@
-export const login = (username, users, currentSession) => {
-	const user = users.find((user) => username === user.name);
-	const isUserAuthorized = currentSession.users.includes(user.id);
+import { findUser } from './utils.js';
 
-	if (isUserAuthorized) {
+const isAuthorized = (userId, session) => {
+	return session.users.includes(userId);
+};
+
+export const login = (username, users, currentSession) => {
+	const user = findUser(users, username, 'username');
+
+	if (!user) {
 		return { success: false, status: 401 };
 	}
 
-	if (!user) {
+	if (isAuthorized(user.id, currentSession)) {
 		return { success: false, status: 401 };
 	}
 
@@ -15,9 +20,7 @@ export const login = (username, users, currentSession) => {
 };
 
 export const logout = (userId, currentSession) => {
-	const isUserAuthorized = currentSession.users.includes(userId);
-
-	if (!isUserAuthorized) {
+	if (!isAuthorized(userId, currentSession)) {
 		return { success: false, status: 401 };
 	}
 
@@ -27,6 +30,10 @@ export const logout = (userId, currentSession) => {
 	return { success: true, status: 200 };
 };
 
-export const getEveryStory = (stories) => {
-	return { success: true, stories };
+export const getAllStories = (userId, currentSession, stories) => {
+	if (!isAuthorized(userId, currentSession)) {
+		return { success: false, status: 401 };
+	}
+
+	return { status: 200, success: true, stories };
 };
