@@ -19,8 +19,17 @@ const doesStoryExists = (storyId, stories) => {
 	return stories.some((story) => story.id === storyId);
 };
 
-const isValidContent = (story) => {
-	return story.content.length !== 0;
+const addStory = (id, { title, content, authorId }, stories) => {
+	const story = {
+		id,
+		authorId,
+		title,
+		content,
+		claps: [],
+		comments: [],
+	};
+
+	stories.push(story);
 };
 
 export const toggleClap = (userId, storyId, stories) => {
@@ -66,32 +75,16 @@ export const getComments = (storyId, comments) => {
 };
 
 export const getStory = (storyId, stories) => {
-	if (!isValidContent(story)) {
-		return { success: true, status: 400 };
-	}
+	const story = stories.find((story) => story.id === storyId);
 
 	if (!doesStoryExists(storyId, stories)) {
 		return { success: false, status: 404 };
 	}
 
-	const story = stories.find((story) => story.id === id);
 	return { success: true, status: 200, story };
 };
 
-const addStory = (id, { title, content, authorId }, stories) => {
-	const story = {
-		id,
-		authorId,
-		title,
-		content,
-		claps: [],
-		comments: [],
-	};
-
-	stories.push(story);
-};
-
-export const createStoryHandler = (storyToCreate, stories) => {
+export const createStory = (storyToCreate, stories) => {
 	const { title, content } = storyToCreate;
 	const isValidContent = ![content.trim().length, title.trim().length].includes(
 		0,
