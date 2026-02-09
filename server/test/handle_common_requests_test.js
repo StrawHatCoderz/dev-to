@@ -5,21 +5,21 @@ import { session } from "../src/mock/current-session.js";
 
 describe("handle common requests", () => {
   it("=> login should return success response when user have acc", () => {
-    const requestInfo = { route: "login", body: "deadpool" };
+    const requestInfo = { route: "login", body: { username : "deadpool"} };
     const response = handleCommonRequests(requestInfo);
     assertEquals(response.success, true);
     assertEquals(response.status, 200);
     assertEquals(session.users, [1]);
   });
   it("=> login should return failure response when user doesn't have acc", () => {
-    const requestInfo = { route: "login", body: "dksl" };
+    const requestInfo = { route: "login",  body: { username : "dskdl"} };
     const response = handleCommonRequests(requestInfo);
     assertEquals(response.success, false);
     assertEquals(response.status, 401);
     assertEquals(session.users, [1]);
   });
   it("=> logout should return success response", () => {
-    const requestInfo = { route: "logout", body: 1 };
+    const requestInfo = { route: "logout", body: { id : 1} };
     const response = handleCommonRequests(requestInfo);
     assertEquals(response.success, true);
     assertEquals(response.status, 200);

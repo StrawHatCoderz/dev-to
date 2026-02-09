@@ -5,12 +5,12 @@ import { mockStories, mockUsers } from "../mock/mock-user.js";
 export const handleCommonRequests = ({ route, body }) => {
   switch (route) {
     case "login": {
-      const username = body;
+      const {username} = body;
       return login(username, mockUsers, session);
     }
 
     case "logout": {
-      const id = body;
+      const {id} = body;
       return logout(id, session);
     }
 
