@@ -1,11 +1,9 @@
-import { createStoryHandler } from "./story/create_story.js";
-import { deleteStory } from "./story/delete_story.js";
-import { stories } from "./user/mock-user.js";
+import { createStory, deleteStory } from "../handlers/story_handlers.js";
 
 export const handleStoryRequests = ({ route, body, params }) => {
   switch (route) {
     case "create": {
-      const response = createStoryHandler(body, stories)
+      const response = createStory(body, stories)
       return response;
     }
     case "delete": {
@@ -13,8 +11,5 @@ export const handleStoryRequests = ({ route, body, params }) => {
       return response;
     }
   }
-
-  
-
 
 }
