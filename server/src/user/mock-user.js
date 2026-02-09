@@ -9,7 +9,7 @@ export const mockUsers = [
 			published: [],
 		},
 	},
-	
+
 ];
 
 export const stories = [{
