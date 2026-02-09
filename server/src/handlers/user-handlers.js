@@ -1,4 +1,4 @@
-import { getUser } from './utils.js';
+import { findUser } from './utils.js';
 
 const addFollower = (id, userId, followerId) => {
 	const follower = {
@@ -47,7 +47,7 @@ export const getUserFollowers = (userId, users, currentSession) => {
 		return { success: false, status: 401 };
 	}
 
-	const user = users.find((user) => user.id === userId);
+	const user = findUser(users, userId);
 	const followers = user.followers;
 
 	return { success: true, followers, status: 200 };
@@ -60,7 +60,7 @@ export const getUsersFollowing = (userId, users, currentSession) => {
 		return { success: false, status: 401 };
 	}
 
-	const user = users.find((user) => user.id === userId);
+	const user = findUser(users, userId);
 	const followers = user.followers;
 
 	return { success: true, followers, status: 200 };
@@ -72,34 +72,34 @@ export const getUserStories = (id, session, users) => {
 		return { success: false, status: 401 };
 	}
 
-	const user = users.find((user) => user.id === id);
+	const user = findUser(users, userId);
 
 	return { success: true, user: user.stories, status: 200 };
 };
 
 export const follow = (users, targetId, initiatorId) => {
-	const user = getUser(users, targetId);
+	const user = findUser(users, targetId);
 	if (!user) {
 		return { success: false, status: 404 };
 	}
 
 	addFollower(user.followers.length + 1, targetId, initiatorId, users);
 
-	const initiatorUser = getUser(users, initiatorId);
+	const initiatorUser = findUser(users, initiatorId);
 	addFollowing(initiatorUser.following.length + 1, initiatorId, targetId);
 
 	return { success: true, status: 200 };
 };
 
 export const unfollow = (users, initiatorId, targetId) => {
-	const targetFollowers = getUser(users, targetId).followers;
+	const targetFollowers = findUser(users, targetId).followers;
 	const { success } = removeFromFollowers(targetFollowers, initiatorId);
 
 	if (!success) {
 		return { success, status: 404 };
 	}
 
-	const userFollowingList = getUser(users, initiatorId).following;
+	const userFollowingList = findUser(users, initiatorId).following;
 	removeFromFollowing(userFollowingList, targetId);
 
 	return { success: true, status: 200 };
