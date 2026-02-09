@@ -66,15 +66,15 @@ export const getUsersFollowing = (userId, users, currentSession) => {
 	return { success: true, followers, status: 200 };
 };
 
-export const getUserStories = (id, session, users) => {
-	const isAuthorizedUser = session.users.includes(id);
+export const getUserStories = (userId, session, users) => {
+	const isAuthorizedUser = session.users.includes(userId);
 	if (!isAuthorizedUser) {
 		return { success: false, status: 401 };
 	}
 
 	const user = findUser(users, userId);
 
-	return { success: true, user: user.stories, status: 200 };
+	return { success: true, stories: user.stories, status: 200 };
 };
 
 export const follow = (users, targetId, initiatorId) => {
