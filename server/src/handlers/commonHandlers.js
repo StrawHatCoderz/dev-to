@@ -22,8 +22,6 @@ export const logout = (userId, currentSession) => {
 	return { success: true, status: 200 };
 };
 
-export const getEveryStory = (users) => {
-
+export const getEveryStory = (stories) => {
+	return stories;
 }
-
-
