@@ -25,8 +25,9 @@ describe('common handlers', () => {
 		});
 
 		it(' => should login sucuessfully', () => {
-			const session = { users: [1] };
+			const session = { users: [] };
 			const response = login('deadpool', mockUsers, session);
+			console.log(response);
 			assertEquals(response.success, true);
 			assertEquals(response.status, 200);
 		});

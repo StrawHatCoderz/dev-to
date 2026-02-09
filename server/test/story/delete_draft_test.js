@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "jsr:@std/testing/bdd";
-import { deleteDraft } from "../../src/story/delete_draft.js";
+import { deleteDraft } from "../../src/handlers/story/delete_draft.js";
 
 describe("delete draft", () => {
   it("==> should handle invalid draftId", () => {

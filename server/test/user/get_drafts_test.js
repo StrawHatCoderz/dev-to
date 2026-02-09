@@ -4,7 +4,7 @@ import {
   getDraftsHandler,
   isIdExistInTheSession,
   retrieveDraftsById,
-} from "../../src/user/get_drafts.js";
+} from "../../src/handlers/user/get_drafts.js";
 
 describe("testing the drafts : ", () => {
   describe("checks whether the user id exist in the session or not : ", () => {

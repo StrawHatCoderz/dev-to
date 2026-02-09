@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "jsr:@std/testing/bdd";
-import { createDraft, createDraftHandler } from "../../src/story/create_draft.js";
+import { createDraft, createDraftHandler } from "../../src/handlers/story/create_draft.js";
 
 describe("create draft tests", () => {
   it("=> should return draft with given values", () => {
