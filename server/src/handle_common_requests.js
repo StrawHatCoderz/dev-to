@@ -1,6 +1,6 @@
-import { session } from "./current-session.js";
+import { session } from "./mock/current-session.js";
 import { login,logout, getEveryStory } from "./handlers/common_handlers.js";
-import { mockUsers } from "./user/mock-user.js";
+import { mockUsers } from "./mock/mock-user.js";
 
 export const handleCommonReqests = (requestInfo) => {
   const { command, params } = requestInfo;
@@ -20,7 +20,7 @@ export const handleCommonReqests = (requestInfo) => {
       const stories = getEveryStory(mockUsers);
       return stories;
     }
-    
+
   }
 
 }
