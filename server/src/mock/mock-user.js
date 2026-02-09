@@ -14,5 +14,7 @@ export const mockStories = [
 		title: 'abc',
 		content: 'abc',
 		isPublished: true,
+		claps: [],
+		comments : []
 	},
 ];
