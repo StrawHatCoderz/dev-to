@@ -10,7 +10,7 @@ const mockUsers = [
 
 drafts: [], stories: []
 
-## story structure should be :
+## stories/drafts structure should be :
 
 ```
 drafts = [{
@@ -20,7 +20,7 @@ drafts = [{
   authorId : 1
 }]
 
-published = [
+stories = [
   {
   title : abc title,
   storyContent : abcd content
