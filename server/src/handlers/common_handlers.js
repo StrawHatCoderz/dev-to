@@ -5,7 +5,7 @@ export const login = (username, users, session) => {
 		return { success: false, status: 401 };
 	}
 
-	session.users.push(userId);
+	session.users.push(user.id);
 	return { success: true, status: 200 };
 };
 
