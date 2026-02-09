@@ -1,11 +1,16 @@
-export const login = (username, users, session) => {
+export const login = (username, users, currentSession) => {
 	const user = users.find((user) => username === user.name);
+	const isUserAuthorized = currentSession.users.includes(user.id);
+
+	if (isUserAuthorized) {
+		return { success: false, status: 401 };
+	}
 
 	if (!user) {
 		return { success: false, status: 401 };
 	}
 
-	session.users.push(user.id);
+	currentSession.users.push(user.id);
 	return { success: true, status: 200 };
 };
 
@@ -23,5 +28,5 @@ export const logout = (userId, currentSession) => {
 };
 
 export const getEveryStory = (stories) => {
-	return stories;
+	return { success: true, stories };
 };

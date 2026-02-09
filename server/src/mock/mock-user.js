@@ -9,16 +9,14 @@ export const mockUsers = [
 			published: [],
 		},
 	},
-
 ];
 
-export const stories = [{
-	id : 1,
-	authorId: 1,
-	title: "abc",
-	content: "abc",
-	isPublished: true
-}];
-
-
-
+export const mockStories = [
+	{
+		id: 1,
+		authorId: 1,
+		title: 'abc',
+		content: 'abc',
+		isPublished: true,
+	},
+];

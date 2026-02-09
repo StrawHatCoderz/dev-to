@@ -1,10 +1,8 @@
 import { handleCommonReqests } from './handle_common_requests.js';
 
 export const parseGetRequest = (path) => {
-	const [_, ...args] = path.split('/');
-
-	const [route, ...body] = args;
-	return { route, body };
+	const [_, route, ...params] = path.split('/');
+	return { route, params };
 };
 
 export const parsePostRequest = async (path, request) => {
@@ -20,12 +18,23 @@ const methodHandler = {
 
 export const parseRequest = async (request) => {
 	const pathname = new URL(request.url).pathname;
-	return await methodHandler[request.method](pathname, request);
+	const parser = methodHandler[request.method];
+	return await parser(pathname, request);
 };
 
 export const requestHandler = async (request) => {
 	const parsedRequest = await parseRequest(request);
-	const response = handleCommonReqests(parsedRequest);
+	const pathname = new URL(request.url).pathname;
+	const prefix = pathname.split('/')[0] || '/';
+
+	const handlers = {
+		'/': handleCommonReqests,
+	};
+
+	const handler = handlers[prefix];
+	if (!handler) return new Response('Invalid Route');
+
+	const response = handler(parsedRequest);
 	console.log(response);
 	return new Response(response);
 };
