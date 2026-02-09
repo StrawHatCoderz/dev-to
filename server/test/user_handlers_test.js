@@ -9,26 +9,26 @@ import {
 } from '../src/handlers/user_handlers.js';
 
 describe('User Handlers', () => {
+	let mockUsers;
+
+	beforeEach(() => {
+		mockUsers = [
+			{
+				id: 1,
+				name: 'deadpool',
+				followers: [],
+				following: [],
+			},
+			{
+				id: 2,
+				name: 'Bkon',
+				followers: [],
+				following: [],
+			},
+		];
+	});
+
 	describe('follow test cases', () => {
-		let mockUsers;
-
-		beforeEach(() => {
-			mockUsers = [
-				{
-					id: 1,
-					name: 'deadpool',
-					followers: [],
-					following: [],
-				},
-				{
-					id: 2,
-					name: 'Bkon',
-					followers: [],
-					following: [],
-				},
-			];
-		});
-
 		it(' => should insert follower into follwers list', () => {
 			const response = follow(mockUsers, 1, 2);
 			assertEquals(response.success, true);
@@ -54,24 +54,6 @@ describe('User Handlers', () => {
 	});
 
 	describe('un-follow test cases', () => {
-		let mockUsers;
-		beforeEach(() => {
-			mockUsers = [
-				{
-					id: 1,
-					name: 'deadpool',
-					followers: [],
-					following: [],
-				},
-				{
-					id: 2,
-					name: 'Bkon',
-					followers: [],
-					following: [],
-				},
-			];
-		});
-
 		it(' => should fail when user is not following anyone', () => {
 			const response = unfollow(mockUsers, 2, 1);
 			assertEquals(response.success, false);
@@ -114,22 +96,6 @@ describe('User Handlers', () => {
 	});
 
 	describe('user followers tests', () => {
-		let mockUsers;
-		beforeEach(() => {
-			mockUsers = [
-				{
-					id: 1,
-					name: 'deadpool',
-					followers: [],
-					following: [],
-					stories: {
-						drafts: [],
-						published: [],
-					},
-				},
-			];
-		});
-
 		it(' => should return error when user is not authorized', () => {
 			const mockSession = {
 				users: [],
@@ -159,23 +125,6 @@ describe('User Handlers', () => {
 	});
 
 	describe('users following test', () => {
-		let mockUsers;
-
-		beforeEach(() => {
-			mockUsers = [
-				{
-					id: 1,
-					name: 'deadpool',
-					followers: [],
-					following: [],
-					stories: {
-						drafts: [],
-						published: [],
-					},
-				},
-			];
-		});
-
 		it(' => should return error if user is unauthorised', () => {
 			const mockSession = {
 				users: [],
