@@ -1,21 +1,21 @@
-import { getEveryStory, login, logout } from '../handlers/common_handlers.js'
-import { session } from '../mock/current-session.js';
-import { mockStories, mockUsers } from '../mock/mock-user.js';
+import { getEveryStory, login, logout } from "../handlers/common_handlers.js";
+import { session } from "../mock/current-session.js";
+import { mockStories, mockUsers } from "../mock/mock-user.js";
 
-export const handleCommonReqests = ({ route, body }) => {
-	switch (route) {
-		case 'login': {
-			const { username } = body;
-			return login(username, mockUsers, session);
-		}
+export const handleCommonRequests = ({ route, body }) => {
+  switch (route) {
+    case "login": {
+      const {username} = body;
+      return login(username, mockUsers, session);
+    }
 
-		case 'logout': {
-			const { id } = body;
-			return logout(id, session);
-		}
+    case "logout": {
+      const {id} = body;
+      return logout(id, session);
+    }
 
-		case 'stories': {
-			return getEveryStory(mockStories);
-		}
-	}
+    case "stories": {
+      return getEveryStory(mockStories);
+    }
+  }
 };

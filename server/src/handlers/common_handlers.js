@@ -24,10 +24,10 @@ export const logout = (userId, currentSession) => {
 		return { success: false, status: 401 };
 	}
 
-	const indexOfUserId = currentSession.users.indexOf(userId);
+  const indexOfUserId = currentSession.users.indexOf(userId);
 
-	currentSession.users.splice(indexOfUserId, 1);
-	return { success: true, status: 200 };
+  currentSession.users.splice(indexOfUserId, 1);
+  return { success: true, status: 200 };
 };
 
 export const getEveryStory = (userId, currentSession, stories) => {

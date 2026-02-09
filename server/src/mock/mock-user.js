@@ -4,10 +4,6 @@ export const mockUsers = [
 		name: 'deadpool',
 		followers: [],
 		following: [],
-		stories: {
-			drafts: [],
-			published: [],
-		},
 	},
 ];
 
@@ -18,5 +14,7 @@ export const mockStories = [
 		title: 'abc',
 		content: 'abc',
 		isPublished: true,
+		claps: [],
+		comments : []
 	},
 ];

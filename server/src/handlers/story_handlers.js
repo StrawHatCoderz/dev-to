@@ -19,13 +19,14 @@ const doesStoryExists = (storyId, stories) => {
 	return stories.some((story) => story.id === storyId);
 };
 
-const addStory = (id, { title, content, authorId }, stories) => {
+const addStory = (id, { title, content, authorId, isPublished }, stories) => {
 	const story = {
 		id,
 		authorId,
 		title,
 		content,
 		claps: [],
+		isPublished,
 		comments: [],
 	};
 

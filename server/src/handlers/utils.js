@@ -1,3 +1,3 @@
-export const findUser = (users, userId) => {
-	return users.find((user) => user.id === userId);
+export const findUser = (users, userId, findLabel = 'id') => {
+	return users.find((user) => user[findLabel] === userId);
 };
