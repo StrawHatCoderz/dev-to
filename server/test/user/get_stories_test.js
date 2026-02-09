@@ -4,7 +4,7 @@ import {
 	getStoriesHandler,
 	isIdExistInTheSession,
 	retrieveUserDetails,
-} from '../../src/user/stories.js';
+} from '../../src/user/get_stories.js';
 
 describe('testing the get stories functionality : ', () => {
 	describe('validation : ', () => {
