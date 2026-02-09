@@ -1,3 +1,3 @@
-export const getRequestHandler = () => {
+export const handleUserRequests = () => {
 
 }
