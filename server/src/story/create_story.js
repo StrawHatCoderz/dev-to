@@ -1,14 +1,3 @@
-// stories : {
-//   drafts : [{
-//     title : abc title,
-//     storyContent : abcd content
-//     storyId : 1,
-//     authorId : 1,
-//     claps : 10,
-//     comments: []
-//   }]
-// }
-
 export const createStory = (title, content, id, authorId) => {
   return {
     id,

@@ -14,6 +14,7 @@ drafts: [], stories: []
 
 ```
 drafts = [{
+  draftId
   title : abc title,
   storyContent : abcd content
   authorId : 1
@@ -111,5 +112,31 @@ database implementation
 - user id (who commented): integer
 - commented on: timestamp
 
+<<<<<<< HEAD
 # session
 - user id : 
+=======
+# Handlers
+
+- [ ] user
+  - [ ] createUser
+  - [ ] getUser
+  - [ ] deleteUser
+
+- [ ] story
+  - [ ] createStory
+  - [ ] getStory
+  - [x] deleteStory
+  - [ ] getStories
+
+- [ ] drafts
+  - [ ] createDraft
+  - [ ] getDraft
+  - [x] deleteDraft
+  - [ ] updateDraft
+  - [ ] getDrafts
+
+- [x] comments
+  - [x] addComment
+  - [x] getComments
+>>>>>>> b0445b74a95b386d9b282de19b1df28476411b65
