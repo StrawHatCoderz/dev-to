@@ -1,3 +1,3 @@
-export const postRequestHandler = () => {
+export const handleStoryRequests = () => {
 
 }

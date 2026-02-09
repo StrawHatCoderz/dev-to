@@ -1,6 +1,6 @@
 import { findUser } from './utils.js';
 
-const addFollower = (id, userId, followerId) => {
+const addFollower = (id, userId, followerId, user) => {
 	const follower = {
 		id,
 		userId,
@@ -10,13 +10,13 @@ const addFollower = (id, userId, followerId) => {
 	user.followers.push(follower);
 };
 
-const addFollowing = (id, userId, followingId) => {
+const addFollowing = (id, userId, followingId, user) => {
 	const following = {
 		id,
 		userId,
 		followingId,
 	};
-	followerUser.following.push(following);
+	user.following.push(following);
 };
 
 const removeFromFollowers = (followers, initiatorId) => {
@@ -66,15 +66,15 @@ export const getUsersFollowing = (userId, users, currentSession) => {
 	return { success: true, followers, status: 200 };
 };
 
-export const getUserStories = (id, session, users) => {
-	const isAuthorizedUser = session.users.includes(id);
+export const getUserStories = (userId, session, users) => {
+	const isAuthorizedUser = session.users.includes(userId);
 	if (!isAuthorizedUser) {
 		return { success: false, status: 401 };
 	}
 
 	const user = findUser(users, userId);
 
-	return { success: true, user: user.stories, status: 200 };
+	return { success: true, stories: user.stories, status: 200 };
 };
 
 export const follow = (users, targetId, initiatorId) => {
@@ -83,10 +83,15 @@ export const follow = (users, targetId, initiatorId) => {
 		return { success: false, status: 404 };
 	}
 
-	addFollower(user.followers.length + 1, targetId, initiatorId, users);
+	addFollower(user.followers.length + 1, targetId, initiatorId, user);
 
 	const initiatorUser = findUser(users, initiatorId);
-	addFollowing(initiatorUser.following.length + 1, initiatorId, targetId);
+	addFollowing(
+		initiatorUser.following.length + 1,
+		initiatorId,
+		targetId,
+		initiatorUser,
+	);
 
 	return { success: true, status: 200 };
 };
