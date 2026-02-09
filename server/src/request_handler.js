@@ -1,25 +1,51 @@
-export const parseGetRequest = (path) => {
-  const [_, ...args] = path.split("/");
-  const [command, ...params] = args;
-  return { command, params };
+const commonRouteHandler = async (pathname, method, request) => {
+  const [_, route, ...params] = pathname.split("/");
+  return (method === "POST")
+    ? { route, params: [], body: await request.json() }
+    : { route, body: {}, params };
 };
 
-export const parsePostRequest = async (path, request) => {
-  const [_, command] = path.split("/");
-  const params = await request.json();
-  return { command, params };
+const storyHandler = async (pathname, method, request) => {
+  const [_, _, route, params] = pathname.split("/");
+  return (method === "POST")
+    ? { route, params: [], body: await request.json() }
+    : { route, body: {}, params };
 };
 
-const methodHandler = {
-  GET: parseGetRequest,
-  POST: parsePostRequest,
+const userHandler = async (pathname, method, request) => {
+  const [_, _, route, params] = pathname.split("/");
+  return (method === "POST")
+    ? { route, params: [], body: await request.json() }
+    : { route, body: {}, params };
 };
 
-export const parseRequest = async (request) => {
+const commonRoutes = ["login", "logout", "stories"];
+
+export const requestHandler = (request) => {
+  let response;
   const pathname = new URL(request.url).pathname;
-  return await methodHandler[request.method](pathname, request);
-};
+  const [_, route] = pathname.split("/");
 
-export const requestHandler = async (request) => {
-  await parseRequest(request);
+  if (commonRoutes.includes(route)) {
+    response = commonRouteHandler(pathname, request.method);
+  } else if (route === "story") {
+    response = storyHandler();
+  } else if (route === "user") {
+    response = userHandler();
+  } else {
+    response = "Invalid Request";
+  }
+
+  return new Response(response);
 };
+/*
+
+common handler :
+  login
+  logout
+  stories
+
+user handler :
+
+story handler
+*/
