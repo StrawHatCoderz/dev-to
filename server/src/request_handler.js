@@ -1,4 +1,4 @@
-import { handleCommonReqests } from './handle_common_requests.js';
+import { handleCommonReqests } from './routes/handle_common_requests.js';
 
 export const parseGetRequest = (path) => {
 	const [_, route, ...params] = path.split('/');
