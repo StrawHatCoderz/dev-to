@@ -1,8 +1,4 @@
-import { findUser } from './utils.js';
-
-const isAuthorized = (userId, session) => {
-	return session.users.includes(userId);
-};
+import { findUser, isAuthorized } from './utils.js';
 
 export const login = (username, users, currentSession) => {
 	const user = findUser(users, username, 'username');
@@ -24,13 +20,13 @@ export const logout = (userId, currentSession) => {
 		return { success: false, status: 401 };
 	}
 
-  const indexOfUserId = currentSession.users.indexOf(userId);
+	const indexOfUserId = currentSession.users.indexOf(userId);
 
-  currentSession.users.splice(indexOfUserId, 1);
-  return { success: true, status: 200 };
+	currentSession.users.splice(indexOfUserId, 1);
+	return { success: true, status: 200 };
 };
 
-export const getEveryStory = (userId, currentSession, stories) => {
+export const getAllStories = (userId, currentSession, stories) => {
 	if (!isAuthorized(userId, currentSession)) {
 		return { success: false, status: 401 };
 	}
