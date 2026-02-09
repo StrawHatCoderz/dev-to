@@ -1,6 +1,6 @@
 import { session } from "./current-session.js";
-import { login,logout, getEveryStory } from "./handlers/common_handlers.js";
-import { mockUsers } from "./user/mock-user.js";
+import { getEveryStory, login, logout } from "./handlers/common_handlers.js";
+import { mockUsers, stories } from "./user/mock-user.js";
 
 export const handleCommonReqests = (requestInfo) => {
   const { command, params } = requestInfo;
@@ -16,11 +16,8 @@ export const handleCommonReqests = (requestInfo) => {
       const response = logout(userId, session);
       return response;
     }
-    case "get every story": {
-      const stories = getEveryStory(mockUsers);
-      return stories;
+    case "stories": {
+      return getEveryStory(stories);
     }
-    
   }
-
-}
+};

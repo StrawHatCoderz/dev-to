@@ -12,5 +12,13 @@ export const mockUsers = [
 	
 ];
 
+export const stories = [{
+	id : 1,
+	authorId: 1,
+	title: "abc",
+	content: "abc",
+	isPublished: true
+}];
+
 
 
