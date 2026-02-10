@@ -4,7 +4,7 @@ const isAlreadyClapped = (database, userId, storyId) => {
 	const query = `
 		SELECT 1
 		FROM claps
-		WHERE story_id = ? AND user_id = ?
+		WHERE story_id = ? AND clapped_by = ?
 		LIMIT 1
 	`;
 	const statement = database.prepare(query);
@@ -14,7 +14,7 @@ const isAlreadyClapped = (database, userId, storyId) => {
 const unClapStory = (database, clappedBy, storyId) => {
 	const query = `
 		DELETE FROM claps
-		WHERE story_id = ? AND user_id = ?
+		WHERE story_id = ? AND clapped_by = ?
 	`;
 	const statement = database.prepare(query);
 	return statement.run(storyId, clappedBy);
@@ -22,7 +22,7 @@ const unClapStory = (database, clappedBy, storyId) => {
 
 const clapStory = (database, clappedBy, storyId) => {
 	const query = `
-		INSERT INTO claps(story_id, user_id)
+		INSERT INTO claps(story_id, clapped_by)
 		VALUES (?, ?)
 	`;
 	const statement = database.prepare(query);
@@ -54,7 +54,9 @@ export const toggleClap = (database, userId, storyId) => {
 		return { success: false, status: 404 };
 	}
 
-	const action = isAlreadyClapped(story, userId) ? unClapStory : clapStory;
+	const action = isAlreadyClapped(database, userId, storyId)
+		? unClapStory
+		: clapStory;
 	action(database, userId, storyId);
 
 	return { success: true, status: 200 };

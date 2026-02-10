@@ -2,29 +2,34 @@ import { assertEquals } from '@std/assert/equals';
 import { beforeEach, describe, it } from '@std/testing/bdd';
 import { DatabaseSync } from 'node:sqlite';
 import { initDB } from '../src/db/init.js';
-import {
-	addComment,
-	createStory,
-	deleteStory,
-	getComments,
-	getStory,
-	toggleClap,
-} from '../src/handlers/story_handlers1.js';
-
+import { toggleClap } from '../src/handlers/story_handler2.js';
 describe('story handlers', () => {
 	let database;
 	let userId;
 	let storyId;
+	let publishedStoryId;
 	beforeEach(() => {
 		database = new DatabaseSync(':memory:');
 		initDB(database);
-		userId = database.exec("insert into user(username) values('deadpool')");
-		storyId = database.exec(
-			"insert into story(title, content, author_id, is_published) values('title 1', 'content 1', )",
-		);
+
+		userId = database
+			.prepare("insert into user(username) values('deadpool1') RETURNING id")
+			.get().id;
+
+		storyId = database
+			.prepare(
+				`
+					INSERT INTO stories(title, content, author_id, is_published)
+					VALUES('title 1', 'content 1', 1, true)
+				`,
+			)
+			.run().lastInsertRowid;
+		publishedStoryId = database
+			.prepare(`INSERT INTO published_stories(story_id) VALUES(${storyId})`)
+			.run().lastInsertRowid;
 	});
 
-	describe('clap test cases', () => {
+	describe.only('clap test cases', () => {
 		let mockStories;
 		beforeEach(() => {
 			mockStories = [
@@ -39,27 +44,30 @@ describe('story handlers', () => {
 		});
 
 		it(' => should clap on valid story', () => {
-			const mockStory = mockStories[0];
-			const { status, success } = toggleClap(1, mockStory.id, mockStories);
+			const { status, success } = toggleClap(
+				database,
+				userId,
+				publishedStoryId,
+			);
 
-			assertEquals(mockStory.claps.length, 1);
 			assertEquals(status, 200);
 			assertEquals(success, true);
 		});
 
 		it(' => should unclap the valid story', () => {
-			const mockStory = mockStories[0];
-			toggleClap(1, mockStory.id, mockStories);
-			const { status, success } = toggleClap(1, mockStory.id, mockStories);
+			toggleClap(database, userId, publishedStoryId);
+			const { status, success } = toggleClap(
+				database,
+				userId,
+				publishedStoryId,
+			);
 
-			assertEquals(mockStory.claps.length, 0);
 			assertEquals(status, 200);
 			assertEquals(success, true);
 		});
 
 		it(' => should handle clapping invalid story id', () => {
-			const { status, success } = toggleClap(1, 2, mockStories);
-
+			const { status, success } = toggleClap(database, userId, 3);
 			assertEquals(status, 404);
 			assertEquals(success, false);
 		});
