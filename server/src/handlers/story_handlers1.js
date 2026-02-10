@@ -1,3 +1,5 @@
+import { title } from "node:process";
+
 const getClapIndex = (story, userId) =>
 	story.claps.findIndex((clap) => clap.clappedBy === userId);
 
@@ -85,18 +87,22 @@ export const getStory = (storyId, stories) => {
 	return { success: true, status: 200, story };
 };
 
-export const createStory = (storyToCreate, stories) => {
+const insertStory = (database, storyToCreate) => {
+	const { title, content, authorId } = storyToCreate;
+	const query = `INSERT INTO stories (title, content, author_id, isPublished) VALUES(?,?,?,?)`;
+	const statement = database.prepare(query);
+	return statement.run(title, content, authorId, false);
+}
+
+export const createStory = (database, storyToCreate) => {
 	const { title, content } = storyToCreate;
-	const isValidContent = ![content.trim().length, title.trim().length].includes(
-		0,
-	);
+	const isValidContent = ![content.trim().length, title.trim().length].includes(0);
 
 	if (!isValidContent) {
 		return { success: false, status: 400 };
 	}
 
-	const id = stories.length + 1;
-	addStory(id, storyToCreate, stories);
+	insertStory(database, storyToCreate);
 
 	return { success: true, status: 200 };
 };

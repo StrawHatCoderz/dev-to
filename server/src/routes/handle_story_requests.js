@@ -4,7 +4,7 @@ import { mockStories } from "../mock/mock-user.js";
 export const handleStoryRequests = ({ route, body, params }) => {
   switch (route) {
     case "create": {
-      return createStory(body, mockStories);
+      return createStory(database, body);
     }
     case "delete": {
       return deleteStory(params[0], mockStories);
