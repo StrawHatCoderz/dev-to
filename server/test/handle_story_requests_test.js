@@ -16,28 +16,29 @@ describe("handle story requests", () => {
       params: [],
     };
     const expectedStories = [
-  {
-    authorId: 1,
-    claps: [],
-    comments: [],
-    content: "abc",
-    id: 1,
-    isPublished: true,
-    title: "abc",
-  }, {
-    authorId: 1,
-    claps: [],
-    comments: [],
-    content: "content 1",
-    id: 2,
-    isPublished: true,
-    title: "title 1",
-  }
-];
+      {
+        authorId: 1,
+        claps: [],
+        comments: [],
+        content: "abc",
+        id: 1,
+        isPublished: true,
+        title: "abc",
+      },
+      {
+        authorId: 1,
+        claps: [],
+        comments: [],
+        content: "content 1",
+        id: 2,
+        isPublished: true,
+        title: "title 1",
+      },
+    ];
 
     const response = handleStoryRequests(requestInfo);
     assertEquals(response.success, true);
     assertEquals(response.status, 200);
     assertEquals(mockStories, expectedStories);
   });
-})
+});
