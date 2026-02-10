@@ -122,15 +122,10 @@ export const getComments = (database, storyId) => {
 	return { success: true, status: 200, comments: result };
 };
 
-export const retrieveStoryById = (database, id) => {
-	const query = `SELECT * FROM stories WHERE story_id = ?`;
-	const statement = database.prepare(query);
-	return statement.get(id);
-};
+export const getStory = (database, storyId) => {
+	const story = findStory(database, storyId);
 
-export const getStory = (storyId) => {
-	const story = retrieveStoryById(storyId);
-	if (story === undefined) {
+	if (!story) {
 		return { success: false, status: 404 };
 	}
 

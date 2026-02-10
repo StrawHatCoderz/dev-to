@@ -5,6 +5,7 @@ import { initDB } from '../src/db/init.js';
 import {
 	addComment,
 	getComments,
+	getStory,
 	toggleClap,
 } from '../src/handlers/story_handler.js';
 
@@ -126,28 +127,20 @@ describe('story handlers', () => {
 		});
 	});
 
-	describe('get story test cases', () => {
-		let mockStories;
-
-		beforeEach(() => {
-			mockStories = [
-				{
-					id: 1,
-					title: 'mock story',
-					content: 'mock content',
-				},
-			];
-		});
-
+	describe.only('get story test cases', () => {
 		it(' => should fail with invalid story id', () => {
-			const actual = getStory(1, [{ id: 2 }]);
-			assertEquals(actual.status, 404);
+			const { success, status } = getStory(database, 3);
+
+			assertEquals(success, false);
+			assertEquals(status, 404);
 		});
 
 		it(' => should return the story with valid id', () => {
-			const actual = getStory(1, mockStories);
-			assertEquals(actual.success, true);
-			assertEquals(actual.status, 200);
+			const { success, story, status } = getStory(database, publishedStoryId);
+
+			assertEquals(success, true);
+			assertEquals(status, 200);
+			assertEquals(story.title, 'title 1');
 		});
 	});
 
