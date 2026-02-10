@@ -18,24 +18,21 @@ export const login = (database, username) => {
 
 	addUserToSession(database, user.id);
 
-	return { success: true, status: 200 };
+	return { success: true, status: 200, userId: user.id };
 };
 
-export const getAllStories = (database, userId) => {
-	if (!isAuthorized(database, userId)) {
-		return { success: false, status: 401 };
-	}
-
-	const stories = fetchStories(database);
-	return { status: 200, success: true, stories };
-};
-
-export const logout = (database, username) => {
-	const user = findUser(database, username, 'username');
+export const logout = (database, id) => {
+	const user = findUser(database, id);
 
 	if (!isAuthorized(database, user.id)) {
 		return { success: false, status: 401 };
 	}
+
 	removeUserFromSession(database, user.id);
 	return { success: true, status: 200 };
+};
+
+export const getAllStories = (database) => {
+	const stories = fetchStories(database);
+	return { status: 200, success: true, stories };
 };
