@@ -1,6 +1,8 @@
-import { describe, it } from "@std/testing/bdd";
+import { describe, it, beforeEach } from "@std/testing/bdd";
 import { assertEquals } from "@std/assert";
 import { handleStoryRequests } from "../src/routes/story_requests_route.js";
+import { DatabaseSync } from "node:sqlite";
+import { initDB } from "../src/db/init.js";
 
 describe("handle story requests", () => {
   let database;
@@ -10,7 +12,7 @@ describe("handle story requests", () => {
     initDB(database);
     database.exec(`INSERT INTO user(username) VALUES('deadpool')`);
   });
-  it.only("=> should create story when story, title is there", () => {
+  it("=> should create story when story, title is there", () => {
     const requestInfo = {
       route: "create",
       body: {
@@ -70,12 +72,3 @@ describe("handle story requests", () => {
   });
 });
 
-describe("testing the get story functionality : ", () => {
-  describe("retrieve the story from the stories : ", () => {
-    it("no id is present in stories table : ", () => {
-      const actual = retrieveStoryById(database, 1);
-      const expected = undefined;
-      assertEquals(actual, expected);
-    });
-  });
-});

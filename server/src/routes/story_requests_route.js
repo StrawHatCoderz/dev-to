@@ -1,4 +1,4 @@
-import { addComment, createStory, deleteStory, getComments, getStory, toggleClap } from "../handlers/story_handlers1.js";
+import { addComment, createStory, deleteStory, getComments, getStory, toggleClap } from "../handlers/story_handler.js";
 import { mockStories } from "../mock/mock-user.js";
 
 export const handleStoryRequests = ({ route, body, params }, database) => {
