@@ -115,14 +115,11 @@ export const getComments = (database, storyId) => {
 		FROM comments
 		WHERE story_id = ?
 	`;
+
 	const statement = database.prepare(query);
 	const result = statement.all(storyId);
 
-	if (storyComments.length === 0) {
-		return { success: false, status: 400, comments: storyComments };
-	}
-
-	return { success: true, status: 200, comments: storyComments };
+	return { success: true, status: 200, comments: result };
 };
 
 export const retrieveStoryById = (database, id) => {
