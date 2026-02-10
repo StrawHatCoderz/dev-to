@@ -1,9 +1,6 @@
-import { handleStoryRequests } from "../src/routes/handle_story_requests.js";
-import { beforeEach, describe, it } from "@std/testing/bdd";
+import { describe, it } from "@std/testing/bdd";
 import { assertEquals } from "@std/assert";
-import { retrieveStoryById } from "../src/handlers/story_handler2.js";
-import { DatabaseSync } from "node:sqlite";
-import { initDB } from "../src/db/init.js";
+import { handleStoryRequests } from "../src/routes/story_requests_route.js";
 
 describe("handle story requests", () => {
   let database;

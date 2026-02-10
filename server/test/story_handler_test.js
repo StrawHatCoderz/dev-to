@@ -6,7 +6,7 @@ import {
 	addComment,
 	getComments,
 	toggleClap,
-} from '../src/handlers/story_handler2.js';
+} from '../src/handlers/story_handler.js';
 
 describe('story handlers', () => {
 	let database;
