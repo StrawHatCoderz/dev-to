@@ -44,6 +44,6 @@ export const findStory = (database, storyId) => {
 		WHERE story_id = ?
 	`;
 	const statement = database.prepare(query);
-
-	return statement.get(storyId);
+	
+	return statement.all(storyId);
 };
