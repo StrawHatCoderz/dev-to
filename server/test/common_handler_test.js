@@ -43,24 +43,18 @@ describe('common handlers', () => {
 
 	describe('logout test cases', () => {
 		it(' => should fail when user is not in session', () => {
-			const mockSession = {
-				users: [],
-			};
 
-			const response = logout(1, mockSession);
+			const response = logout(database, 'deadpool');
 			assertEquals(response.success, false);
 			assertEquals(response.status, 401);
 		});
 
-		it(' => should logout sucuessfully', () => {
-			const mockSession = {
-				users: [1],
-			};
-
-			const response = logout(1, mockSession);
+		it(' => should logout sucuessfully when user logged in ', () => {
+			
+			login(database, 'deadpool')
+			const response = logout(database, 'deadpool');
 			assertEquals(response.success, true);
 			assertEquals(response.status, 200);
-			assertEquals(mockSession.users.length, 0);
 		});
 	});
 

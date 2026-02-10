@@ -22,6 +22,10 @@ export const isAuthorizedInDB = (database, userId) => {
 	return statement.get(userId) !== undefined;
 };
 
-export const isAuthorized = (userId, session) => {
-	return session.users.includes(userId);
-};
+export const removeUserFromSession = (database, userId) => {
+	const query = `DELETE FROM session WHERE user_id = ?`;
+	const statement = database.prepare(query);
+	return statement.run(userId);
+}
+
+

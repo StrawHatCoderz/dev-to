@@ -1,8 +1,8 @@
 import {
 	addUserToSession,
 	findUserInDB,
-	isAuthorized,
 	isAuthorizedInDB,
+  removeUserFromSession,
 } from './utils.js';
 
 export const login = (database, username) => {
@@ -20,14 +20,14 @@ export const login = (database, username) => {
 	return { success: true, status: 200 };
 };
 
-export const logout = (userId, currentSession) => {
-	if (!isAuthorized(userId, currentSession)) {
+export const logout = (database,username) => {
+	const user = findUserInDB(database, username, 'username');
+	console.log(user);
+
+	if (!isAuthorizedInDB(database, user.id)) {
 		return { success: false, status: 401 };
 	}
-
-	const indexOfUserId = currentSession.users.indexOf(userId);
-
-	currentSession.users.splice(indexOfUserId, 1);
+	removeUserFromSession(database, user.id);
 	return { success: true, status: 200 };
 };
 
