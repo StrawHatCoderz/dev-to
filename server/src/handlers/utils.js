@@ -1,12 +1,8 @@
-export const findUser = (users, target, findByLabel = 'id') => {
-	return users.find((user) => user[findByLabel] === target);
-};
-
-export const findUserInDB = (database, target, findByColumn = 'id') => {
-	const query = `SELECT id, username FROM user WHERE ? = ?`;
+export const findUser = (database, target, findByColumn = 'id') => {
+	const query = `SELECT id, username FROM user WHERE ${findByColumn} = ?`;
 	const statement = database.prepare(query);
 
-	return statement.get(findByColumn, target);
+	return statement.get(target);
 };
 
 export const addUserToSession = (database, userId) => {
@@ -15,7 +11,7 @@ export const addUserToSession = (database, userId) => {
 	return statement.run(userId);
 };
 
-export const isAuthorizedInDB = (database, userId) => {
+export const isAuthorized = (database, userId) => {
 	const query = `SELECT 1 FROM session WHERE user_id = ? LIMIT 1`;
 	const statement = database.prepare(query);
 	return statement.get(userId) !== undefined;
@@ -33,10 +29,6 @@ export const removeUserFromSession = (database, userId) => {
 	return statement.run(userId);
 };
 
-export const isAuthorized = (userId, session) => {
-	return session.users.includes(userId);
-};
-
 export const findStory = (database, storyId) => {
 	const query = `
 		SELECT story_id, title, content, author_id, is_published, created_on, updated_on
@@ -44,6 +36,6 @@ export const findStory = (database, storyId) => {
 		WHERE story_id = ?
 	`;
 	const statement = database.prepare(query);
-	
+
 	return statement.all(storyId);
 };
