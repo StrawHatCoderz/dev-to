@@ -1,6 +1,6 @@
-import { handleCommonRequests } from './routes/handle_common_requests.js';
-import { handleStoryRequests } from './routes/handle_story_requests.js';
-import { handleUserRequest } from './routes/handle_user_requests.js';
+import { handleCommonRequests } from './routes/common_requests_route.js';
+import { handleStoryRequests } from './routes/story_requests_route.js';
+import { handleUserRequest } from './routes/user_requests_route.js';
 
 const parseCommonRequest = async (pathname, method, request) => {
 	const [_, route, ...params] = pathname.split('/');

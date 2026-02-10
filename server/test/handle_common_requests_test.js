@@ -3,10 +3,10 @@ import { beforeEach, describe, it } from '@std/testing/bdd';
 import { DatabaseSync } from 'node:sqlite';
 import { initDB } from '../src/db/init.js';
 import { session } from '../src/mock/current-session.js';
-import { handleCommonRequests } from '../src/routes/handle_common_requests.js';
+import { handleCommonRequests } from '../src/routes/common_requests_route.js';
 
 describe('handle common requests', () => {
-	let database;	
+	let database;
 
 	beforeEach(() => {
 		database = new DatabaseSync(':memory:');

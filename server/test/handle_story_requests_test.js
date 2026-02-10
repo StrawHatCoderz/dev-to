@@ -1,6 +1,6 @@
 import { describe, it } from "@std/testing/bdd";
 import { assertEquals } from "@std/assert";
-import { handleStoryRequests } from "../src/routes/handle_story_requests.js";
+import { handleStoryRequests } from "../src/routes/story_requests_route.js";
 
 describe("handle story requests", () => {
   let database;
