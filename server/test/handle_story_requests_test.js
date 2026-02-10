@@ -1,6 +1,8 @@
-import { describe, it } from "@std/testing/bdd";
+import { describe, it , beforeEach} from "@std/testing/bdd";
 import { assertEquals } from "@std/assert";
-import { handleStoryRequests } from "../src/routes/handle_story_requests.js";
+import { retrieveStoryById } from "../src/handlers/story_handler2.js";
+import { DatabaseSync } from "node:sqlite";
+import { initDB } from "../src/db/init.js";
 
 describe("handle story requests", () => {
   let database;
@@ -10,17 +12,15 @@ describe("handle story requests", () => {
     initDB(database);
     database.exec(`INSERT INTO user(username) VALUES('deadpool')`);
   });
-  // it("=> should create story when story, title is there", () => {
-  //   const requestInfo = {
-  //     route: "create",
-  //     body: {
-  //       storyToCreate: { title: "title", content: "content 1", authorId: 1 },
-  //     },
-  //     params: [],
-  //   };
-  //   const response = handleStoryRequests(requestInfo);
-  //   assertEquals(response.success, true);
-  //   assertEquals(response.status, 200);
-  //   assertEquals(mockStories, expectedStories);
-  // });
+
+  describe("testing the get story functionality : ", () => {
+    describe("retrieve the story from the stories : ", () => {
+      it("no id is present in stories table : ", () => {
+        const actual = retrieveStoryById(database, 1);
+        const expected = undefined;
+        assertEquals(actual, expected)
+      });
+    });
+
+  });
 });
