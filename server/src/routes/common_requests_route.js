@@ -16,9 +16,11 @@ export const commonRequestRouter = ({ route, body }, database) => {
 		logout: logoutRoute,
 		stories: getAllStories,
 	};
+
 	const router = routes[route];
-	if (!router) return { success: false, status: 404 };
-	const result = router(database, body);
+	const result = router
+		? router(database, body)
+		: { success: false, status: 404 };
 
 	return new Response(JSON.stringify(result));
 };

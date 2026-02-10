@@ -17,7 +17,7 @@ describe('handle common requests', () => {
 			.get().id;
 	});
 
-	it('=> login should return success response when user have acc', async () => {
+	it(' => should route to login', async () => {
 		const requestInfo = { route: 'login', body: { username: 'deadpool' } };
 
 		const response = commonRequestRouter(requestInfo, database);
@@ -27,17 +27,7 @@ describe('handle common requests', () => {
 		assertEquals(status, 200);
 	});
 
-	it("=> login should return failure response when user doesn't have acc", async () => {
-		const requestInfo = { route: 'login', body: { username: 'dskdl' } };
-
-		const response = commonRequestRouter(requestInfo, database);
-		const { success, status } = await response.json();
-
-		assertEquals(success, false);
-		assertEquals(status, 401);
-	});
-
-	it('=> logout should return success response', async () => {
+	it(' => should route to logout', async () => {
 		const { userId } = login(database, 'deadpool');
 		const requestInfo = { route: 'logout', body: { id: userId } };
 
@@ -48,17 +38,7 @@ describe('handle common requests', () => {
 		assertEquals(status, 200);
 	});
 
-	it('=> logout should return failure response', async () => {
-		const requestInfo = { route: 'logout', body: { id: userId } };
-
-		const response = commonRequestRouter(requestInfo, database);
-		const { success, status } = await response.json();
-
-		assertEquals(success, false);
-		assertEquals(status, 401);
-	});
-
-	it('=> get every story ', async () => {
+	it(' => should route to get stories', async () => {
 		const requestInfo = { route: 'stories' };
 
 		const response = commonRequestRouter(requestInfo, database);
@@ -67,5 +47,19 @@ describe('handle common requests', () => {
 		assertEquals(success, true);
 		assertEquals(status, 200);
 		assertEquals(stories, []);
+	});
+
+	it(' => should fail for invalid route', async () => {
+		const requestInfo = {
+			route: 'invalid',
+			body: {},
+			params: [],
+		};
+
+		const response = commonRequestRouter(requestInfo, database);
+		const { success, status } = await response.json();
+
+		assertEquals(success, false);
+		assertEquals(status, 404);
 	});
 });

@@ -1,4 +1,4 @@
-import { findStory } from '../utils.js';
+import { findStory, findUser } from '../utils.js';
 
 const isAlreadyClapped = (database, userId, storyId) => {
 	const query = `
@@ -89,8 +89,9 @@ export const addComment = (database, userId, storyId, content) => {
 	}
 
 	const story = findStory(database, storyId);
+	const user = findUser(database, userId);
 
-	if (!story) {
+	if (!story || !user) {
 		return { success: false, status: 400 };
 	}
 
@@ -98,8 +99,10 @@ export const addComment = (database, userId, storyId, content) => {
 		INSERT INTO comments(story_id, content, commented_by)
 		VALUES(?, ?, ?)
 	`;
+
 	const statement = database.prepare(query);
 	const result = statement.run(storyId, content, userId);
+
 	return { success: true, status: 200, id: result.lastInsertRowid };
 };
 
