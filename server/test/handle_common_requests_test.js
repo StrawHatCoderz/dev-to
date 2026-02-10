@@ -6,7 +6,7 @@ import { session } from '../src/mock/current-session.js';
 import { handleCommonRequests } from '../src/routes/handle_common_requests.js';
 
 describe('handle common requests', () => {
-	let database;
+	let database;	
 
 	beforeEach(() => {
 		database = new DatabaseSync(':memory:');
