@@ -1,6 +1,7 @@
-import { describe, it, beforeEach } from "@std/testing/bdd";
-import { assertEquals } from "@std/assert";
 import { handleStoryRequests } from "../src/routes/handle_story_requests.js";
+import { beforeEach, describe, it } from "@std/testing/bdd";
+import { assertEquals } from "@std/assert";
+import { retrieveStoryById } from "../src/handlers/story_handler2.js";
 import { DatabaseSync } from "node:sqlite";
 import { initDB } from "../src/db/init.js";
 
@@ -41,33 +42,43 @@ describe("handle story requests", () => {
     const requestInfo = {
       route: "delete",
       body: {
-        id : 1
+        id: 1,
       },
-      params : []
-    }
+      params: [],
+    };
     const requestToInsert = {
       route: "create",
       body: {
         storyToCreate: { title: "title 1", content: "content 1", authorId: 1 },
       },
       params: [],
-    }
+    };
     handleStoryRequests(requestToInsert, database);
     const response = handleStoryRequests(requestInfo, database);
     assertEquals(response.success, true);
-    assertEquals(response.status, 200)
-  })
+    assertEquals(response.status, 200);
+  });
   it("=> should not delete the story when id is not present", () => {
     const requestInfo = {
       route: "delete",
       body: {
-        id : 5
+        id: 5,
       },
-      params : []
-    }
-    
+      params: [],
+    };
+
     const response = handleStoryRequests(requestInfo, database);
     assertEquals(response.success, false);
-    assertEquals(response.status, 400)
-  })
+    assertEquals(response.status, 400);
+  });
+});
+
+describe("testing the get story functionality : ", () => {
+  describe("retrieve the story from the stories : ", () => {
+    it("no id is present in stories table : ", () => {
+      const actual = retrieveStoryById(database, 1);
+      const expected = undefined;
+      assertEquals(actual, expected);
+    });
+  });
 });
