@@ -9,7 +9,7 @@ import {
 	getComments,
 	getStory,
 	toggleClap,
-} from '../src/handlers/story_handlers.js';
+} from '../src/handlers/story_handlers1.js';
 
 describe('story handlers', () => {
 	let database;
