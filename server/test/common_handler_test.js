@@ -1,5 +1,7 @@
 import { assertEquals } from '@std/assert/equals';
 import { beforeEach, describe, it } from '@std/testing/bdd';
+import { DatabaseSync } from 'node:sqlite';
+import { initDB } from '../src/db/init.js';
 import {
 	getAllStories,
 	login,
@@ -7,37 +9,35 @@ import {
 } from '../src/handlers/common_handlers.js';
 
 describe('common handlers', () => {
-	let mockUsers;
+	let database;
 	beforeEach(() => {
-		mockUsers = [
-			{
-				id: 1,
-				username: 'deadpool',
-				followers: [],
-				following: [],
-			},
-		];
+		database = new DatabaseSync(':memory:');
+		initDB(database);
+		database.exec("insert into user(username) values('deadpool')");
 	});
 
 	describe('login test cases', () => {
 		it(" => should fail when user doesn't have account", () => {
-			const session = { users: [] };
-
-			const response = login('invalid user', mockUsers, session);
+			const response = login(database, 'invalid user');
 
 			assertEquals(response.success, false);
 			assertEquals(response.status, 401);
-			assertEquals(session.users.length, 0);
 		});
 
 		it(' => should login sucuessfully', () => {
-			const session = { users: [] };
-
-			const response = login('deadpool', mockUsers, session);
+			const response = login(database, 'deadpool');
 
 			assertEquals(response.success, true);
 			assertEquals(response.status, 200);
-			assertEquals(session.users.length, 1);
+		});
+
+		it(' => should fail when trying to login in login session', () => {
+			login(database, 'deadpool');
+
+			const response = login(database, 'deadpool');
+
+			assertEquals(response.success, false);
+			assertEquals(response.status, 401);
 		});
 	});
 

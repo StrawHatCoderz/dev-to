@@ -1,18 +1,22 @@
-import { findUser, isAuthorized } from './utils.js';
+import {
+	addUserToSession,
+	findUserInDB,
+	isAuthorized,
+	isAuthorizedInDB,
+} from './utils.js';
 
-export const login = (username, users, currentSession) => {
-	const user = findUser(users, username, 'name');
-	console.log(user)
-
+export const login = (database, username) => {
+	const user = findUserInDB(database, username, 'username');
 	if (!user) {
 		return { success: false, status: 401 };
 	}
 
-	if (isAuthorized(user.id, currentSession)) {
+	if (isAuthorizedInDB(database, user.id)) {
 		return { success: false, status: 401 };
 	}
 
-	currentSession.users.push(user.id);
+	addUserToSession(database, user.id);
+
 	return { success: true, status: 200 };
 };
 
