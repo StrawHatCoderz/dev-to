@@ -1,18 +1,32 @@
-const getClapIndex = (story, userId) =>
-	story.claps.findIndex((clap) => clap.clappedBy === userId);
+import { findStory } from './utils.js';
 
-const isAlreadyClapped = (story, userId) => {
-	return getClapIndex(story, userId) !== -1;
+const isAlreadyClapped = (database, userId, storyId) => {
+	const query = `
+		SELECT 1
+		FROM claps
+		WHERE story_id = ? AND user_id = ?
+		LIMIT 1
+	`;
+	const statement = database.prepare(query);
+	return statement.get(storyId, userId) !== undefined;
 };
 
-const unClapStory = (_id, story, userId, _storyId) => {
-	const clapIndex = getClapIndex(story, userId);
-	story.claps.splice(clapIndex, 1);
+const unClapStory = (database, clappedBy, storyId) => {
+	const query = `
+		DELETE FROM claps
+		WHERE story_id = ? AND user_id = ?
+	`;
+	const statement = database.prepare(query);
+	return statement.run(storyId, clappedBy);
 };
 
-const clapStory = (id, story, clappedBy, storyId) => {
-	const clap = { id, storyId, clappedBy };
-	story.claps.push(clap);
+const clapStory = (database, clappedBy, storyId) => {
+	const query = `
+		INSERT INTO claps(story_id, user_id)
+		VALUES (?, ?)
+	`;
+	const statement = database.prepare(query);
+	return statement.run(storyId, clappedBy);
 };
 
 const doesStoryExists = (storyId, stories) => {
@@ -33,16 +47,15 @@ const addStory = (id, { title, content, authorId, isPublished }, stories) => {
 	stories.push(story);
 };
 
-export const toggleClap = (userId, storyId, stories) => {
-	const story = stories.find((story) => story.id === storyId);
+export const toggleClap = (database, userId, storyId) => {
+	const story = findStory(database, storyId);
 
 	if (!story) {
 		return { success: false, status: 404 };
 	}
 
 	const action = isAlreadyClapped(story, userId) ? unClapStory : clapStory;
-	const clapId = story.claps.length;
-	action(clapId, story, userId, storyId);
+	action(database, userId, storyId);
 
 	return { success: true, status: 200 };
 };
