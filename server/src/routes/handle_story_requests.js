@@ -1,13 +1,13 @@
 import { addComment, createStory, deleteStory, getComments, getStory, toggleClap } from "../handlers/story_handlers1.js";
 import { mockStories } from "../mock/mock-user.js";
 
-export const handleStoryRequests = ({ route, body, params }) => {
+export const handleStoryRequests = ({ route, body, params }, database) => {
   switch (route) {
     case "create": {
-      return createStory(database, body);
+      return createStory(database, body.storyToCreate);
     }
     case "delete": {
-      return deleteStory(params[0], mockStories);
+      return deleteStory(database, body.id);
     }
     case "story": {
       const storyId = params[0];
@@ -25,3 +25,4 @@ export const handleStoryRequests = ({ route, body, params }) => {
     }
   }
 };
+

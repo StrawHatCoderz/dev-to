@@ -1,6 +1,3 @@
-export const findUser = (users, target, findByLabel = "id") => {
-  return users.find((user) => user[findByLabel] === target);
-};
 
 export const findUserInDB = (database, target, findByColumn = "id") => {
   const query = `SELECT id, username FROM user WHERE ${findByColumn} = ?`;
@@ -39,11 +36,8 @@ export const isAuthorized = (userId, session) => {
 
 export const findStory = (database, storyId) => {
 	const query = `
-		SELECT id, title, content,author_id, is_published, created_on, updated_on
-		FROM stories
-		WHERE id = ?
-	`;
+		SELECT * FROM stories where story_id = ?;`;
 	const statement = database.prepare(query);
-
-	return statement.get(storyId);
+	
+	return statement.all(storyId);
 };
