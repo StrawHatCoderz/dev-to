@@ -1,5 +1,7 @@
 import { assertEquals } from '@std/assert/equals';
 import { beforeEach, describe, it } from '@std/testing/bdd';
+import { DatabaseSync } from 'node:sqlite';
+import { initDB } from '../src/db/init.js';
 import {
 	addComment,
 	createStory,
@@ -10,9 +12,16 @@ import {
 } from '../src/handlers/story_handlers.js';
 
 describe('story handlers', () => {
-	let mockStories;
+	let database;
+	let userId;
+	let storyId;
 	beforeEach(() => {
-		mockStories = [];
+		database = new DatabaseSync(':memory:');
+		initDB(database);
+		userId = database.exec("insert into user(username) values('deadpool')");
+		storyId = database.exec(
+			"insert into story(title, content, author_id, is_published) values('title 1', 'content 1', )",
+		);
 	});
 
 	describe('clap test cases', () => {

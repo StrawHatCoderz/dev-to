@@ -25,3 +25,14 @@ export const isAuthorizedInDB = (database, userId) => {
 export const isAuthorized = (userId, session) => {
 	return session.users.includes(userId);
 };
+
+export const findStory = (database, storyId) => {
+	const query = `
+		SELECT id, title, content,author_id, is_published, created_on, updated_on
+		FROM stories
+		WHERE id = ?
+	`;
+	const statement = database.prepare(query);
+
+	return statement.get(storyId);
+};
