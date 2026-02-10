@@ -13,11 +13,11 @@ describe("handle story requests", () => {
     initDB(database);
     database.exec(`INSERT INTO user(username) VALUES('deadpool')`);
   });
-  it("=> should create story when story, title is there", () => {
+  it.only("=> should create story when story, title is there", () => {
     const requestInfo = {
       route: "create",
       body: {
-        storyToCreate: { title: "title", content: "content 1", authorId: 1 },
+        storyToCreate: { title: "title", content: "content 1", authorId: 1, isPublished : false },
       },
       params: [],
     };
@@ -30,7 +30,7 @@ describe("handle story requests", () => {
     const requestInfo = {
       route: "create",
       body: {
-        storyToCreate: { title: "", content: "content 1", authorId: 1 },
+        storyToCreate: { title: "", content: "content 1", authorId: 1, isPublished : false },
       },
       params: [],
     };
@@ -49,7 +49,7 @@ describe("handle story requests", () => {
     const requestToInsert = {
       route: "create",
       body: {
-        storyToCreate: { title: "title 1", content: "content 1", authorId: 1 },
+        storyToCreate: { title: "title 1", content: "content 1", authorId: 1, isPublished : false },
       },
       params: [],
     };

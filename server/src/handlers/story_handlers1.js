@@ -88,14 +88,25 @@ export const getStory = (storyId, stories) => {
 };
 
 const insertStory = (database, storyToCreate) => {
-  const { title, content, authorId } = storyToCreate;
+	const { title, content, authorId, isPublished } = storyToCreate;
+	const booleanValues = {
+		true: 1,
+		false : 0,
+	}
   const query = `INSERT INTO stories(title, content, author_id) VALUES (?,?,?)`;
   const statement = database.prepare(query);
-  return statement.run(title, content, authorId);
+  return statement.run(title, content, authorId, booleanValues[isPublished]);
+};
+
+const insertStoryIntoPublished = (database, storyId) => {
+  const query = `INSERT INTO stories(title, content, author_id) VALUES (?)`;
+  const statement = database.prepare(query);
+  return statement.run(storyId);
 };
 
 export const createStory = (database, storyToCreate) => {
-  const { title, content } = storyToCreate;
+	
+  const { title, content, isPublished } = storyToCreate;
   const isValidContent = ![content.trim().length, title.trim().length].includes(
     0,
   );
@@ -105,9 +116,14 @@ export const createStory = (database, storyToCreate) => {
   }
 
   const { lastInsertRowid } = insertStory(database, storyToCreate);
+  if (isPublished) {
+    const resp = insertStoryIntoPublished(database, lastInsertRowid);
+    console.log(resp);
+  }
 
   return { success: true, status: 200, storyId: lastInsertRowid };
 };
+
 const removeStory = (database, storyId) => {
   const query = `DELETE FROM stories where story_id = ?`;
   const statement = database.prepare(query);
