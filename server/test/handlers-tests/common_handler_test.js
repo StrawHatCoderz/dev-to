@@ -1,12 +1,12 @@
 import { assertEquals } from '@std/assert/equals';
 import { beforeEach, describe, it } from '@std/testing/bdd';
 import { DatabaseSync } from 'node:sqlite';
-import { initDB } from '../src/db/init.js';
+import { initDB } from '../../src/db/init.js';
 import {
 	getAllStories,
 	login,
 	logout,
-} from '../src/handlers/common_handlers.js';
+} from '../../src/handlers/common_handlers.js';
 
 describe('common handlers', () => {
 	let database;
@@ -67,7 +67,7 @@ describe('common handlers', () => {
 			login(database, 'deadpool');
 
 			const response = getAllStories(database, 1);
-			console.log(response);
+
 			assertEquals(response.success, true);
 			assertEquals(response.status, 200);
 			assertEquals(response.stories.length, 0);

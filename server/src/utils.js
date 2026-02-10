@@ -17,7 +17,7 @@ export const isAuthorized = (database, userId) => {
 	return statement.get(userId) !== undefined;
 };
 
-export const retrieveStories = (database) => {
+export const fetchStories = (database) => {
 	const query = `SELECT * FROM stories`;
 	const statement = database.prepare(query);
 	return statement.all();

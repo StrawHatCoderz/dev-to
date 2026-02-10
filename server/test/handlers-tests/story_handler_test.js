@@ -1,7 +1,7 @@
 import { assertEquals } from '@std/assert/equals';
 import { beforeEach, describe, it } from '@std/testing/bdd';
 import { DatabaseSync } from 'node:sqlite';
-import { initDB } from '../src/db/init.js';
+import { initDB } from '../../src/db/init.js';
 import {
 	addComment,
 	createStory,
@@ -9,7 +9,7 @@ import {
 	getComments,
 	getStory,
 	toggleClap,
-} from '../src/handlers/story_handler.js';
+} from '../../src/handlers/story_handler.js';
 
 describe('story handlers', () => {
 	let database;

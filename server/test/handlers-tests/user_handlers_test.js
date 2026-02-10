@@ -6,7 +6,7 @@ import {
 	getUsersFollowing,
 	getUserStories,
 	unfollow,
-} from '../src/handlers/user_handlers.js';
+} from '../../src/handlers/user_handlers.js';
 
 describe('User Handlers', () => {
 	let mockUsers;

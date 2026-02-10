@@ -1,6 +1,6 @@
-import { handleCommonRequests } from './routes/common_requests_route.js';
-import { handleStoryRequests } from './routes/story_requests_route.js';
-import { handleUserRequest } from './routes/user_requests_route.js';
+import { commonRequestRouter } from '../routes/common_requests_route.js';
+import { handleStoryRequests } from '../routes/story_requests_route.js';
+import { handleUserRequest } from '../routes/user_requests_route.js';
 
 const parseCommonRequest = async (pathname, method, request) => {
 	const [_, route, ...params] = pathname.split('/');
@@ -29,7 +29,7 @@ export const requestHandler = async (request, database) => {
 			request.method,
 			request,
 		);
-		response = await handleCommonRequests(requestInfo, database);
+		response = await commonRequestRouter(requestInfo, database);
 	} else if (route === 'story') {
 		const requestInfo = await parseRequest(pathname, request.method, request);
 		response = await handleStoryRequests(requestInfo);

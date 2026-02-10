@@ -1,10 +1,10 @@
 import {
 	addUserToSession,
+	fetchStories,
 	findUser,
 	isAuthorized,
 	removeUserFromSession,
-	retrieveStories,
-} from './utils.js';
+} from '../utils.js';
 
 export const login = (database, username) => {
 	const user = findUser(database, username, 'username');
@@ -26,7 +26,7 @@ export const getAllStories = (database, userId) => {
 		return { success: false, status: 401 };
 	}
 
-	const stories = retrieveStories(database);
+	const stories = fetchStories(database);
 	return { status: 200, success: true, stories };
 };
 

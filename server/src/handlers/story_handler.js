@@ -1,4 +1,4 @@
-import { findStory } from './utils.js';
+import { findStory } from '../utils.js';
 
 const isAlreadyClapped = (database, userId, storyId) => {
 	const query = `
