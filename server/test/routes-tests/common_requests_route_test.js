@@ -7,12 +7,11 @@ import { commonRequestRouter } from '../../src/routes/common_requests_route.js';
 
 describe('handle common requests', () => {
 	let database;
-	let userId;
 
 	beforeEach(() => {
 		database = new DatabaseSync(':memory:');
 		initDB(database);
-		userId = database
+		database
 			.prepare("insert into user(username) values('deadpool') RETURNING id")
 			.get().id;
 	});

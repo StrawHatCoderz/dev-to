@@ -7,12 +7,11 @@ import { storyRequestRouter } from '../../src/routes/story_requests_route.js';
 
 describe('route story requests', () => {
 	let database;
-	let userId;
 
 	beforeEach(() => {
 		database = new DatabaseSync(':memory:');
 		initDB(database);
-		userId = database
+		database
 			.prepare("insert into user(username) values('deadpool') RETURNING id")
 			.get().id;
 	});

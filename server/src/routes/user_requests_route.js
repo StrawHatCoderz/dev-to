@@ -1,4 +1,4 @@
-export const userRequestRouter = ({ route, body, params }) => {
+export const userRequestRouter = ({ route, _body, _params }) => {
 	switch (route) {
 		case 'follow':
 			return; // call the follow function
