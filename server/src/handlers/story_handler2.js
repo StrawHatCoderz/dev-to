@@ -100,7 +100,7 @@ export const getStory = (storyId) => {
     return { success: false, status: 404 };
   }
 
-  return { success: true, status: 200, story };
+	return { success: true, status: 200, story };
 };
 
 export const insertComment = (database, storyId, content, commented_by) => {
