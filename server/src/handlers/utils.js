@@ -26,3 +26,10 @@ export const retrieveStories = (database) => {
   const statement = database.prepare(query);
   return statement.all();
 };
+export const removeUserFromSession = (database, userId) => {
+	const query = `DELETE FROM session WHERE user_id = ?`;
+	const statement = database.prepare(query);
+	return statement.run(userId);
+}
+
+

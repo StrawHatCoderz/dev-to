@@ -4,6 +4,11 @@ import {
   isAuthorizedInDB,
   retrieveStories,
 } from "./utils.js";
+	addUserToSession,
+	findUserInDB,
+	isAuthorizedInDB,
+  removeUserFromSession,
+} from './utils.js';
 
 export const login = (database, username) => {
   const user = findUserInDB(database, username, "username");
@@ -27,4 +32,17 @@ export const getAllStories = (database, userId) => {
 
   const stories = retrieveStories(database);
   return { status: 200, success: true, stories };
+}
+
+export const logout = (database,username) => {
+	const user = findUserInDB(database, username, 'username');
+	console.log(user);
+
+	if (!isAuthorizedInDB(database, user.id)) {
+		return { success: false, status: 401 };
+	}
+	removeUserFromSession(database, user.id);
+	return { success: true, status: 200 };
 };
+
+

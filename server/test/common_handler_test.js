@@ -59,6 +59,22 @@ describe("common handlers", () => {
       assertEquals(mockSession.users.length, 0);
     });
   });
+	describe('logout test cases', () => {
+		it(' => should fail when user is not in session', () => {
+
+			const response = logout(database, 'deadpool');
+			assertEquals(response.success, false);
+			assertEquals(response.status, 401);
+		});
+
+		it(' => should logout sucuessfully when user logged in ', () => {
+			
+			login(database, 'deadpool')
+			const response = logout(database, 'deadpool');
+			assertEquals(response.success, true);
+			assertEquals(response.status, 200);
+		});
+	});
 
   describe("stories test cases", () => {
     it(" => should fail with unauthorized user", () => {
