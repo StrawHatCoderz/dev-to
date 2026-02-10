@@ -9,8 +9,8 @@ export const initDB = (database) => {
     );
 
     CREATE TABLE IF NOT EXISTS stories (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT UNIQUE,
+      story_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT UNIQUE NOT NULL,
       content TEXT NOT NULL,
       author_id INTEGER NOT NULL,
       is_published INTEGER DEFAULT 0,
@@ -21,7 +21,9 @@ export const initDB = (database) => {
 
     CREATE TABLE IF NOT EXISTS published_stories (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      published_at TIMESTAMP NOT NULL
+      story_id INTEGER NOT NULL,
+      published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (story_id) REFERENCES stories(story_id) ON DELETE CASCADE
     );
 
     CREATE TABLE IF NOT EXISTS followers (
@@ -36,7 +38,7 @@ export const initDB = (database) => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       story_id INTEGER NOT NULL,
       clapped_by INTEGER NOT NULL,
-      FOREIGN KEY (story_id) REFERENCES stories(story_id) ON DELETE CASCADE,
+      FOREIGN KEY (story_id) REFERENCES published_stories(id) ON DELETE CASCADE,
       FOREIGN KEY (clapped_by) REFERENCES user(id) ON DELETE CASCADE
     );
 
@@ -46,7 +48,7 @@ export const initDB = (database) => {
       content TEXT NOT NULL,
       commented_by INTEGER NOT NULL,
       commented_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (story_id) REFERENCES stories(story_id) ON DELETE CASCADE,
+      FOREIGN KEY (story_id) REFERENCES published_stories(id) ON DELETE CASCADE,
       FOREIGN KEY (commented_by) REFERENCES user(id) ON DELETE CASCADE
     );
 

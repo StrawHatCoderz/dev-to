@@ -153,4 +153,15 @@ GET dashboard => common handlers/ stories of all users
 GET story/id => story handler/ get story
 POST story/clap/id => story handler / toggle clap
 
+# response structure
 
+{
+  status
+  success
+  body:{
+    data
+  }
+  error:{
+    errorMessage
+  }
+}
