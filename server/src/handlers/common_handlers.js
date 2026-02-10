@@ -32,6 +32,8 @@ export const logout = (userId, currentSession) => {
 };
 
 export const getAllStories = (userId, currentSession, stories) => {
+	console.log(userId, currentSession)
+	
 	if (!isAuthorized(userId, currentSession)) {
 		return { success: false, status: 401 };
 	}
