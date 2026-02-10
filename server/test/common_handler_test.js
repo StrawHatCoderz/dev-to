@@ -2,7 +2,11 @@ import { assertEquals } from '@std/assert/equals';
 import { beforeEach, describe, it } from '@std/testing/bdd';
 import { DatabaseSync } from 'node:sqlite';
 import { initDB } from '../src/db/init.js';
-import { getAllStories, login } from '../src/handlers/common_handlers.js';
+import {
+	getAllStories,
+	login,
+	logout,
+} from '../src/handlers/common_handlers.js';
 
 describe('common handlers', () => {
 	let database;
@@ -37,28 +41,6 @@ describe('common handlers', () => {
 		});
 	});
 
-	describe('logout test cases', () => {
-		it(' => should fail when user is not in session', () => {
-			const mockSession = {
-				users: [],
-			};
-
-			const response = logout(1, mockSession);
-			assertEquals(response.success, false);
-			assertEquals(response.status, 401);
-		});
-
-		it(' => should logout sucuessfully', () => {
-			const mockSession = {
-				users: [1],
-			};
-
-			const response = logout(1, mockSession);
-			assertEquals(response.success, true);
-			assertEquals(response.status, 200);
-			assertEquals(mockSession.users.length, 0);
-		});
-	});
 	describe('logout test cases', () => {
 		it(' => should fail when user is not in session', () => {
 			const response = logout(database, 'deadpool');

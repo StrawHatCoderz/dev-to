@@ -2,6 +2,7 @@ import {
 	addUserToSession,
 	findUser,
 	isAuthorized,
+	removeUserFromSession,
 	retrieveStories,
 } from './utils.js';
 
@@ -31,7 +32,6 @@ export const getAllStories = (database, userId) => {
 
 export const logout = (database, username) => {
 	const user = findUser(database, username, 'username');
-	console.log(user);
 
 	if (!isAuthorized(database, user.id)) {
 		return { success: false, status: 401 };
