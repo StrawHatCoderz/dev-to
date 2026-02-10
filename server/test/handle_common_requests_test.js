@@ -42,6 +42,8 @@ describe("handle common requests", () => {
       title: "abc",
       content: "abc",
       isPublished: true,
+      claps: [],
+      comments : []
     }]);
   });
 });
