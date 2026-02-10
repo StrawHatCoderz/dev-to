@@ -1,7 +1,8 @@
 import { findUser, isAuthorized } from './utils.js';
 
 export const login = (username, users, currentSession) => {
-	const user = findUser(users, username, 'username');
+	const user = findUser(users, username, 'name');
+	console.log(user)
 
 	if (!user) {
 		return { success: false, status: 401 };
@@ -27,6 +28,8 @@ export const logout = (userId, currentSession) => {
 };
 
 export const getAllStories = (userId, currentSession, stories) => {
+	console.log(userId, currentSession)
+	
 	if (!isAuthorized(userId, currentSession)) {
 		return { success: false, status: 401 };
 	}
