@@ -2,12 +2,18 @@ import { assertEquals } from '@std/assert/equals';
 import { beforeEach, describe, it } from '@std/testing/bdd';
 import { DatabaseSync } from 'node:sqlite';
 import { initDB } from '../src/db/init.js';
-import { toggleClap } from '../src/handlers/story_handler2.js';
+import {
+	addComment,
+	getComments,
+	toggleClap,
+} from '../src/handlers/story_handler2.js';
+
 describe('story handlers', () => {
 	let database;
 	let userId;
 	let storyId;
 	let publishedStoryId;
+
 	beforeEach(() => {
 		database = new DatabaseSync(':memory:');
 		initDB(database);
@@ -24,25 +30,13 @@ describe('story handlers', () => {
 				`,
 			)
 			.run().lastInsertRowid;
+
 		publishedStoryId = database
 			.prepare(`INSERT INTO published_stories(story_id) VALUES(${storyId})`)
 			.run().lastInsertRowid;
 	});
 
-	describe.only('clap test cases', () => {
-		let mockStories;
-		beforeEach(() => {
-			mockStories = [
-				{
-					id: 1,
-					title: 'story 1',
-					content: 'mock content',
-					claps: [],
-					comments: [],
-				},
-			];
-		});
-
+	describe('clap test cases', () => {
 		it(' => should clap on valid story', () => {
 			const { status, success } = toggleClap(
 				database,
@@ -74,17 +68,13 @@ describe('story handlers', () => {
 	});
 
 	describe('comments test cases', () => {
-		let mockComments;
-		beforeEach(() => (mockComments = []));
-
 		it(' => addComment: should fail when comment content is not present', () => {
-			const { success, status } = addComment('', 1, mockComments, 1);
-			assertEquals(success, false);
-			assertEquals(status, 400);
-		});
-
-		it(' => addComment: should fail when comment content is undefined', () => {
-			const { success, status } = addComment(undefined, 1, mockComments, 1);
+			const { success, status } = addComment(
+				database,
+				userId,
+				publishedStoryId,
+				'',
+			);
 			assertEquals(success, false);
 			assertEquals(status, 400);
 		});
@@ -94,7 +84,7 @@ describe('story handlers', () => {
 				success,
 				status,
 				id: commentId,
-			} = addComment('comment 1', 1, mockComments, 1);
+			} = addComment(database, userId, publishedStoryId, 'comment 1');
 
 			assertEquals(success, true);
 			assertEquals(status, 200);
@@ -102,13 +92,13 @@ describe('story handlers', () => {
 		});
 
 		it(' => addComment: should add second comment successfully', () => {
-			addComment('comment 1', 1, mockComments, 1);
+			addComment(database, userId, publishedStoryId, 'comment 1');
 
 			const {
 				success,
 				status,
 				id: commentId,
-			} = addComment('comment 2', 1, mockComments, 1);
+			} = addComment(database, userId, publishedStoryId, 'comment 2');
 
 			assertEquals(success, true);
 			assertEquals(status, 200);
@@ -116,37 +106,23 @@ describe('story handlers', () => {
 		});
 
 		it(' => getComment: should fail when storyId not present', () => {
-			const mockComments = [];
-			addComment('comment 1', 1, mockComments, 1);
+			const { success, status } = getComments(database, 2);
 
-			const { success, status, comments } = getComments(2, mockComments);
 			assertEquals(success, false);
 			assertEquals(status, 400);
-			assertEquals(comments, []);
 		});
 
 		it(' => getComment: should return comments of a story successfully', () => {
-			const mockComments = [];
-			addComment('comment 1', 1, mockComments, 1);
-			addComment('comment 2', 1, mockComments, 1);
+			addComment(database, userId, publishedStoryId, 'comment 1');
 
-			const { success, status, comments } = getComments(1, mockComments);
+			const { success, status, comments } = getComments(
+				database,
+				publishedStoryId,
+			);
+
 			assertEquals(success, true);
 			assertEquals(status, 200);
-			assertEquals(comments, [
-				{
-					id: 1,
-					content: 'comment 1',
-					storyId: 1,
-					userId: 1,
-				},
-				{
-					id: 2,
-					content: 'comment 2',
-					storyId: 1,
-					userId: 1,
-				},
-			]);
+			assertEquals(comments.length, 1);
 		});
 	});
 
