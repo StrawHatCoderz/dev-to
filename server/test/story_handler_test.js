@@ -4,6 +4,8 @@ import { DatabaseSync } from 'node:sqlite';
 import { initDB } from '../src/db/init.js';
 import {
 	addComment,
+	createStory,
+	deleteStory,
 	getComments,
 	getStory,
 	toggleClap,
@@ -127,7 +129,7 @@ describe('story handlers', () => {
 		});
 	});
 
-	describe.only('get story test cases', () => {
+	describe('get story test cases', () => {
 		it(' => should fail with invalid story id', () => {
 			const { success, status } = getStory(database, 3);
 
@@ -146,72 +148,51 @@ describe('story handlers', () => {
 
 	describe('create story tests ', () => {
 		it(' => should return all story details', () => {
-			const { success, status } = createStory(
-				{ title: 'title', content: 'content', authorId: 1 },
-				mockStories,
-			);
+			const { success, status, storyId } = createStory(database, {
+				title: 'title 2',
+				content: 'sample content',
+				authorId: userId,
+			});
 
 			assertEquals(status, 200);
 			assertEquals(success, true);
-			assertEquals(mockStories.length, 1);
+			assertEquals(storyId, 2);
 		});
 
-		it(' => should return error if there is no content', () => {
-			const mockStories = [];
+		it(' => should return error if there is no title', () => {
+			const { success, status } = createStory(database, {
+				title: '',
+				content: 'sample content',
+				authorId: userId,
+			});
 
-			const storyToCreate = { title: 'title', content: ' ', authorId: 1 };
-			const response = createStory(storyToCreate, mockStories);
-
-			assertEquals(response.success, false);
-			assertEquals(response.status, 400);
-			assertEquals(mockStories.length, 0);
+			assertEquals(success, false);
+			assertEquals(status, 400);
 		});
 
 		it(' => should not return error if there is content', () => {
-			const mockStories = [];
-			const storyToCreate = { title: 'title', content: 'content', authorId: 1 };
+			const { success, status } = createStory(database, {
+				title: 'title 2',
+				content: '',
+				authorId: userId,
+			});
 
-			const response = createStory(storyToCreate, mockStories);
-
-			assertEquals(response.success, true);
-			assertEquals(response.status, 200);
-			assertEquals(mockStories.length, 1);
+			assertEquals(success, false);
+			assertEquals(status, 400);
 		});
 	});
 
 	describe('delete story', () => {
 		it(' => should handle invalid storyId', () => {
-			const mockStories = [
-				{
-					storyId: 1,
-					title: 'abc title',
-					content: 'abcd content',
-					authorId: 1,
-				},
-			];
+			const { success, status } = deleteStory(database, 2);
 
-			const { success, status } = deleteStory(2, mockStories);
 			assertEquals(success, false);
 			assertEquals(status, 400);
 		});
 
 		it(' => should delete a story', () => {
-			const mockStories = [
-				{
-					storyId: 2,
-					title: 'abc title',
-					content: 'abcd content',
-					authorId: 1,
-				},
-				{
-					storyId: 1,
-					title: 'abc title',
-					content: 'abcd content',
-					authorId: 1,
-				},
-			];
+			const { success, status } = deleteStory(database, publishedStoryId);
 
-			const { success, status } = deleteStory(1, mockStories);
 			assertEquals(success, true);
 			assertEquals(status, 200);
 		});

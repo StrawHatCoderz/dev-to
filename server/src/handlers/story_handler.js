@@ -44,7 +44,7 @@ const insertStory = (database, storyToCreate) => {
 
 export const deleteStory = (database, storyId) => {
 	const story = findStory(database, storyId);
-	if (story.length < 1) {
+	if (!story) {
 		return { success: false, status: 400 };
 	}
 
@@ -71,7 +71,7 @@ export const createStory = (database, storyToCreate) => {
 export const toggleClap = (database, userId, storyId) => {
 	const story = findStory(database, storyId);
 
-	if (story.length === 0) {
+	if (!story) {
 		return { success: false, status: 404 };
 	}
 
