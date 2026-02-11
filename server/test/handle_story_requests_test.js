@@ -16,7 +16,7 @@ describe("handle story requests", () => {
     const requestInfo = {
       route: "create",
       body: {
-        storyToCreate: { title: "title", content: "content 1", authorId: 1, isPublished : false },
+        storyToCreate: { title: "title", content: "content 1", authorId: 1, isPublished : true },
       },
       params: [],
     };

@@ -1,6 +1,4 @@
 import { getAllStories, login, logout } from "../handlers/common_handlers.js";
-import { session } from "../mock/current-session.js";
-import { mockStories } from "../mock/mock-user.js";
 
 export const handleCommonRequests = ({ route, body }, database) => {
   switch (route) {

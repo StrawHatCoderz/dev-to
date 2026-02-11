@@ -6,11 +6,11 @@ import {
 } from "./utils.js";
 
 export const login = (database, username) => {
-  const user = findUserInDB(database, username, "username");
-  if (!user) {
+	const user = findUserInDB(database, username, "username");
+	if (!user) {
     return { success: false, status: 401 };
   }
-
+	
   if (isAuthorizedInDB(database, user.id)) {
     return { success: false, status: 401 };
   }
