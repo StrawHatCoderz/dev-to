@@ -1,20 +1,20 @@
-import { getAllStories, login, logout } from '../handlers/common_handlers.js';
+import * as handlers from '../handlers/common_handlers.js';
 
 const loginRoute = (database, body) => {
 	const { username } = body;
-	return login(database, username);
+	return handlers.login(database, username);
 };
 
 const logoutRoute = (database, body) => {
 	const { id } = body;
-	return logout(database, id);
+	return handlers.logout(database, id);
 };
 
 export const commonRequestRouter = ({ route, body }, database) => {
 	const routes = {
 		login: loginRoute,
 		logout: logoutRoute,
-		stories: getAllStories,
+		stories: handlers.getAllStories,
 	};
 
 	const router = routes[route];
