@@ -1,4 +1,4 @@
-import { findStory } from "./utils.js";
+import { findStory, findUser } from '../utils.js';
 
 const isAlreadyClapped = (database, userId, storyId) => {
   const query = `
@@ -45,10 +45,10 @@ const insertIntoStories = (database, storyToCreate) => {
 };
 
 export const deleteStory = (database, storyId) => {
-  const story = findStory(database, storyId);
-  if (story.length < 1) {
-    return { success: false, status: 400 };
-  }
+	const story = findStory(database, storyId);
+	if (!story) {
+		return { success: false, status: 400 };
+	}
 
   removeRecord(database, storyId);
 
@@ -81,9 +81,9 @@ export const createStory = (database, storyToCreate) => {
 export const toggleClap = (database, userId, storyId) => {
   const story = findStory(database, storyId);
 
-  if (story.length === 0) {
-    return { success: false, status: 404 };
-  }
+	if (!story) {
+		return { success: false, status: 404 };
+	}
 
   const action = isAlreadyClapped(database, userId, storyId)
     ? unClapStory
@@ -98,19 +98,22 @@ export const addComment = (database, userId, storyId, content) => {
     return { success: false, status: 400 };
   }
 
-  const story = findStory(database, storyId);
+	const story = findStory(database, storyId);
+	const user = findUser(database, userId);
 
-  if (!story) {
-    return { success: false, status: 400 };
-  }
+	if (!story || !user) {
+		return { success: false, status: 400 };
+	}
 
   const query = `
 		INSERT INTO comments(story_id, content, commented_by)
 		VALUES(?, ?, ?)
 	`;
-  const statement = database.prepare(query);
-  const result = statement.run(storyId, content, userId);
-  return { success: true, status: 200, id: result.lastInsertRowid };
+
+	const statement = database.prepare(query);
+	const result = statement.run(storyId, content, userId);
+
+	return { success: true, status: 200, id: result.lastInsertRowid };
 };
 
 export const getComments = (database, storyId) => {
@@ -125,27 +128,19 @@ export const getComments = (database, storyId) => {
 		FROM comments
 		WHERE story_id = ?
 	`;
-  const statement = database.prepare(query);
-  const result = statement.all(storyId);
 
-  if (storyComments.length === 0) {
-    return { success: false, status: 400, comments: storyComments };
-  }
+	const statement = database.prepare(query);
+	const result = statement.all(storyId);
 
-  return { success: true, status: 200, comments: storyComments };
+	return { success: true, status: 200, comments: result };
 };
 
-export const retrieveStoryById = (database, id) => {
-  const query = `SELECT * FROM stories WHERE story_id = ?`;
-  const statement = database.prepare(query);
-  return statement.get(id);
-};
+export const getStory = (database, storyId) => {
+	const story = findStory(database, storyId);
 
-export const getStory = (storyId) => {
-  const story = retrieveStoryById(storyId);
-  if (story === undefined) {
-    return { success: false, status: 404 };
-  }
+	if (!story) {
+		return { success: false, status: 404 };
+	}
 
   return { success: true, status: 200, story };
 };

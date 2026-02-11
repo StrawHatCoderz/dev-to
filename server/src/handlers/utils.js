@@ -46,5 +46,5 @@ export const findStory = (database, storyId) => {
 	`;
   const statement = database.prepare(query);
 
-  return statement.all(storyId);
+  return statement.get(storyId);
 };

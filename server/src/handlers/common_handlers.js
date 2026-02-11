@@ -1,41 +1,38 @@
 import {
-  addUserToSession,
-  findUserInDB,
-  isAuthorizedInDB,
-  retrieveStories,
-} from "./utils.js";
+	addUserToSession,
+	fetchStories,
+	findUser,
+	isAuthorized,
+	removeUserFromSession,
+} from '../utils.js';
 
 export const login = (database, username) => {
-	const user = findUserInDB(database, username, "username");
+	const user = findUser(database, username, 'username');
 	if (!user) {
-    return { success: false, status: 401 };
-  }
-	
-  if (isAuthorizedInDB(database, user.id)) {
-    return { success: false, status: 401 };
-  }
+		return { success: false, status: 401 };
+	}
 
-  addUserToSession(database, user.id);
+	if (isAuthorized(database, user.id)) {
+		return { success: false, status: 401 };
+	}
 
-  return { success: true, status: 200 };
+	addUserToSession(database, user.id);
+
+	return { success: true, status: 200, userId: user.id };
 };
 
-export const getAllStories = (database, userId) => {
-  if (!isAuthorizedInDB(database, userId)) {
-    return { success: false, status: 401 };
-  }
+export const logout = (database, id) => {
+	const user = findUser(database, id);
 
-  const stories = retrieveStories(database);
-  return { status: 200, success: true, stories };
+	if (!isAuthorized(database, user.id)) {
+		return { success: false, status: 401 };
+	}
+
+	removeUserFromSession(database, user.id);
+	return { success: true, status: 200 };
 };
 
-export const logout = (database, username) => {
-  const user = findUserInDB(database, username, "username");
-  console.log(user);
-
-  if (!isAuthorizedInDB(database, user.id)) {
-    return { success: false, status: 401 };
-  }
-  removeUserFromSession(database, user.id);
-  return { success: true, status: 200 };
+export const getAllStories = (database) => {
+	const stories = fetchStories(database);
+	return { status: 200, success: true, stories };
 };
