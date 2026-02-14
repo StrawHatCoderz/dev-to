@@ -58,4 +58,4 @@ export const getStoriesQuery = () => `
 export const findStoryQuery = () => `
   SELECT story_id, title, content, author_id, is_published, created_on, updated_on
   FROM stories
-  WHERE story_id = ?`;  
+  WHERE story_id = ?`;

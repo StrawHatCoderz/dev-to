@@ -99,7 +99,7 @@ describe('route story requests', () => {
 		assertEquals(story.title, 'title 1');
 	});
 
-	it.ignore(' => should route comments route (get comments)', async () => {
+	it(' => should route comments route (get comments)', async () => {
 		const requestInfo = {
 			route: 'comments',
 			body: {
