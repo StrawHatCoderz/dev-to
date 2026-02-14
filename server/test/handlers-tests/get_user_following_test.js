@@ -4,7 +4,6 @@ import { DatabaseSync } from "node:sqlite";
 import { initDB } from "../../src/db/init.js";
 import { getUserFollowing } from "../../src/handlers/get_user_following.js";
 
-// id , user_id, follower_id
 
 describe("test for the getting user followers : ", () => {
   let database;
@@ -39,23 +38,10 @@ describe("test for the getting user followers : ", () => {
       .run();
     database.prepare(`insert into session(user_id) values(1)`).run();
     const result = getUserFollowing(database, 1);
+    console.log(result.records)
     assertEquals(result.success, true);
     assertEquals(result.status, 200);
     assertEquals(result.records.length, 2)
   });
 });
 
-/*
-2 1
-3 1
-3 2
-
-
-1     2
-2     3
-3
-
-
-
-
-*/
