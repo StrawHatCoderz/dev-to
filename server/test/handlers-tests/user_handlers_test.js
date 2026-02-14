@@ -3,6 +3,7 @@ import { beforeEach, describe, it } from '@std/testing/bdd';
 import { DatabaseSync } from 'node:sqlite';
 import { initDB } from '../../src/db/init.js';
 import { login } from '../../src/handlers/common_handlers.js';
+import { follow } from '../../src/handlers/follow.js';
 import { getUserFollowers } from '../../src/handlers/user_followers.js';
 
 describe('User Handlers', () => {
@@ -12,28 +13,36 @@ describe('User Handlers', () => {
 		initDB(database);
 	});
 
-	describe.ignore('follow test cases', () => {
+	describe('follow test cases', () => {
 		it(' => should insert follower into follwers list', () => {
-			const response = follow(mockUsers, 1, 2);
-			assertEquals(response.success, true);
-			assertEquals(response.status, 200);
-			const famousGuy = mockUsers.find((user) => user.id === 1);
-			assertEquals(famousGuy.followers, [{ id: 1, userId: 1, followerId: 2 }]);
-			assertEquals(famousGuy.followers.length, 1);
+			// deadpool is following perter parker
+			const { userId } = login(database, 'deadpool');
+			const targetId = 2;
 
-			const normalGuy = mockUsers.find((user) => user.id === 2);
-			assertEquals(normalGuy.following, [{ id: 1, userId: 2, followingId: 1 }]);
-			assertEquals(normalGuy.following.length, 1);
+			const { success, status } = follow(database, targetId, userId);
+
+			assertEquals(success, true);
+			assertEquals(status, 200);
+		});
+
+		it(' => should fail when user follows his own account', () => {
+			const { userId } = login(database, 'deadpool');
+			const targetId = userId;
+
+			const { success, status } = follow(database, targetId, userId);
+
+			assertEquals(success, false);
+			assertEquals(status, 401);
 		});
 
 		it(' => should fail when following invalid user', () => {
-			const response = follow(mockUsers, 3, 2);
+			const { userId } = login(database, 'deadpool');
+			const targetId = 999;
 
-			const user = mockUsers.find((user) => user.id === 2);
+			const { success, status } = follow(database, targetId, userId);
 
-			assertEquals(response.success, false);
-			assertEquals(response.status, 404);
-			assertEquals(user.followers.length, 0);
+			assertEquals(success, false);
+			assertEquals(status, 404);
 		});
 	});
 
@@ -88,12 +97,20 @@ describe('User Handlers', () => {
 		});
 
 		it(' => should return all followers for authorized user', () => {
-			const { userId } = login(database, 'deadpool');
-			const { followers, success, status } = getUserFollowers(database, userId);
+			const initiator = login(database, 'deadpool');
+			const target = login(database, 'peter parker');
+
+			// deadpool is following peter parker
+			follow(database, target.userId, initiator.userId);
+			// get all followers of peter parker
+			const { followers, success, status } = getUserFollowers(
+				database,
+				target.userId,
+			);
 
 			assertEquals(success, true);
 			assertEquals(status, 200);
-			assertEquals(followers, []);
+			assertEquals(followers.length, 1);
 		});
 	});
 

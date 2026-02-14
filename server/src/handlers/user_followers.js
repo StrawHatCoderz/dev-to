@@ -8,7 +8,7 @@ export const getUserFollowers = (database, userId) => {
 
 	const query = getUserFollowersQuery();
 	const statement = database.prepare(query);
-	const followers = statement.all();
+	const followers = statement.all(userId);
 
 	return { success: true, followers, status: 200 };
 };
