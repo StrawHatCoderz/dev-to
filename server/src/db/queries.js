@@ -59,3 +59,8 @@ export const findStoryQuery = () => `
   SELECT story_id, title, content, author_id, is_published, created_on, updated_on
   FROM stories
   WHERE story_id = ?`;
+
+export const getFollowingQuery = () => `SELECT * FROM user 
+  INNER JOIN followers 
+  ON user.id = followers.user_id
+  WHERE followers.follower_id = ?`;
