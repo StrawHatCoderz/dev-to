@@ -59,3 +59,16 @@ export const findStoryQuery = () => `
   SELECT story_id, title, content, author_id, is_published, created_on, updated_on
   FROM stories
   WHERE story_id = ?`;
+
+export const getUserFollowersQuery = () => `
+  SELECT follower_id, username
+  FROM followers f
+  JOIN user u
+  ON u.id = f.user_id
+  WHERE user_id = ?
+`;
+
+export const addFollowerQuery = () => `
+  INSERT INTO followers(user_id, follower_id)
+  VALUES (?, ?)
+`;

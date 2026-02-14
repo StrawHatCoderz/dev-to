@@ -1,59 +1,52 @@
-import { assertEquals } from '@std/assert';
+import { assertEquals } from '@std/assert/equals';
 import { beforeEach, describe, it } from '@std/testing/bdd';
-import {
-	follow,
-	getUserFollowers,
-	getUserFollowing,
-	getUserStories,
-	unfollow,
-} from '../../src/handlers/user_handlers.js';
+import { DatabaseSync } from 'node:sqlite';
+import { initDB } from '../../src/db/init.js';
+import { login } from '../../src/handlers/common_handlers.js';
+import { follow } from '../../src/handlers/follow.js';
+import { getUserFollowers } from '../../src/handlers/user_followers.js';
 
-describe.ignore('User Handlers', () => {
-	let mockUsers;
-
+describe('User Handlers', () => {
+	let database;
 	beforeEach(() => {
-		mockUsers = [
-			{
-				id: 1,
-				name: 'deadpool',
-				followers: [],
-				following: [],
-			},
-			{
-				id: 2,
-				name: 'Bkon',
-				followers: [],
-				following: [],
-			},
-		];
+		database = new DatabaseSync(':memory:');
+		initDB(database);
 	});
 
 	describe('follow test cases', () => {
 		it(' => should insert follower into follwers list', () => {
-			const response = follow(mockUsers, 1, 2);
-			assertEquals(response.success, true);
-			assertEquals(response.status, 200);
-			const famousGuy = mockUsers.find((user) => user.id === 1);
-			assertEquals(famousGuy.followers, [{ id: 1, userId: 1, followerId: 2 }]);
-			assertEquals(famousGuy.followers.length, 1);
+			// deadpool is following perter parker
+			const { userId } = login(database, 'deadpool');
+			const targetId = 2;
 
-			const normalGuy = mockUsers.find((user) => user.id === 2);
-			assertEquals(normalGuy.following, [{ id: 1, userId: 2, followingId: 1 }]);
-			assertEquals(normalGuy.following.length, 1);
+			const { success, status } = follow(database, targetId, userId);
+
+			assertEquals(success, true);
+			assertEquals(status, 200);
+		});
+
+		it(' => should fail when user follows his own account', () => {
+			const { userId } = login(database, 'deadpool');
+			const targetId = userId;
+
+			const { success, status } = follow(database, targetId, userId);
+
+			assertEquals(success, false);
+			assertEquals(status, 401);
 		});
 
 		it(' => should fail when following invalid user', () => {
-			const response = follow(mockUsers, 3, 2);
+			const { userId } = login(database, 'deadpool');
+			const targetId = 999;
 
-			const user = mockUsers.find((user) => user.id === 2);
+			const { success, status } = follow(database, targetId, userId);
 
-			assertEquals(response.success, false);
-			assertEquals(response.status, 404);
-			assertEquals(user.followers.length, 0);
+			assertEquals(success, false);
+			assertEquals(status, 404);
 		});
 	});
 
-	describe('un-follow test cases', () => {
+	describe.ignore('un-follow test cases', () => {
 		it(' => should fail when user is not following anyone', () => {
 			const response = unfollow(mockUsers, 2, 1);
 			assertEquals(response.success, false);
@@ -97,34 +90,31 @@ describe.ignore('User Handlers', () => {
 
 	describe('user followers tests', () => {
 		it(' => should return error when user is not authorized', () => {
-			const mockSession = {
-				users: [],
-			};
+			const { success, status } = getUserFollowers(database, 1);
 
-			const { status, success } = getUserFollowers(1, mockUsers, mockSession);
-
-			assertEquals(status, 401);
 			assertEquals(success, false);
+			assertEquals(status, 401);
 		});
 
 		it(' => should return all followers for authorized user', () => {
-			const mockSession = {
-				users: [1],
-			};
+			const initiator = login(database, 'deadpool');
+			const target = login(database, 'peter parker');
 
+			// deadpool is following peter parker
+			follow(database, target.userId, initiator.userId);
+			// get all followers of peter parker
 			const { followers, success, status } = getUserFollowers(
-				1,
-				mockUsers,
-				mockSession,
+				database,
+				target.userId,
 			);
 
 			assertEquals(success, true);
 			assertEquals(status, 200);
-			assertEquals(followers, []);
+			assertEquals(followers.length, 1);
 		});
 	});
 
-	describe('users following test', () => {
+	describe.ignore('users following test', () => {
 		it(' => should return error if user is unauthorised', () => {
 			const mockSession = {
 				users: [],
@@ -147,7 +137,7 @@ describe.ignore('User Handlers', () => {
 		});
 	});
 
-	describe('user stories tests', () => {
+	describe.ignore('user stories tests', () => {
 		let mockUsers;
 
 		beforeEach(() => {
