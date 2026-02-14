@@ -1,21 +1,12 @@
 import { assertEquals } from "@std/assert";
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import {
-<<<<<<< HEAD:server/test/user_handlers_test.js
-  follow,
-  getUserFollowers,
-  getUserFollowing,
-  getUserStories,
-  unfollow,
-} from "../src/handlers/user_handlers.js";
-=======
 	follow,
 	getUserFollowers,
 	getUsersFollowing,
 	getUserStories,
 	unfollow,
 } from '../../src/handlers/user_handlers.js';
->>>>>>> b5b82f83bd0b56944e8660ec9f66b3d1ed96f35d:server/test/handlers-tests/user_handlers_test.js
 
 describe("User Handlers", () => {
   let mockUsers;
