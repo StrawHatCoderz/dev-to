@@ -1,111 +1,105 @@
-import { findUser } from "../utils.js";
+import {
+	addFollowerQuery,
+	getPublishedStoriesQuery,
+	getUserDraftsQuery,
+	getUserFollowersQuery,
+	getUserFollowingQuery,
+	isValidFollowerQuery,
+	removeFollowerQuery,
+} from '../db/queries.js';
+import { findUser, isAuthorized } from '../utils.js';
 
-const addFollower = (id, userId, followerId, user) => {
-  const follower = {
-    id,
-    userId,
-    followerId,
-  };
+const doesFollowerExists = (database, userId, followerId) => {
+	const query = isValidFollowerQuery();
+	const statement = database.prepare(query);
 
-  user.followers.push(follower);
+	const result = statement.get(userId, followerId);
+	return result !== undefined;
 };
 
-const addFollowing = (id, userId, followingId, user) => {
-  const following = {
-    id,
-    userId,
-    followingId,
-  };
-  user.following.push(following);
+const getStories = (database, userId) => {
+	const query = getPublishedStoriesQuery();
+	const statement = database.prepare(query);
+	return statement.all(userId);
 };
 
-const removeFromFollowers = (followers, initiatorId) => {
-  const initiatorIndex = followers.findIndex(
-    (follower) => follower.followerId === initiatorId,
-  );
-
-  if (initiatorIndex === -1) {
-    return { success: false };
-  }
-
-  followers.splice(initiatorIndex, 1);
-  return { success: true };
+const getDrafts = (database, userId) => {
+	const query = getUserDraftsQuery();
+	const statement = database.prepare(query);
+	return statement.all(userId);
 };
 
-const removeFromFollowing = (followings, targetId) => {
-  const targetIdxInFollowing = followings.findIndex(
-    (following) => following.followingId === targetId,
-  );
+export const getUserFollowers = (database, userId) => {
+	if (!isAuthorized(database, userId)) {
+		return { success: false, status: 401 };
+	}
 
-  followings.splice(targetIdxInFollowing, 1);
+	const query = getUserFollowersQuery();
+	const statement = database.prepare(query);
+	const followers = statement.all(userId);
+
+	return { success: true, followers, status: 200 };
 };
 
-export const getUserFollowers = (userId, users, currentSession) => {
-  const isAuthorizedUser = currentSession.users.includes(userId);
+export const getUserFollowing = (database, userId) => {
+	if (!isAuthorized(database, userId)) {
+		return { success: false, status: 401 };
+	}
 
-  if (!isAuthorizedUser) {
-    return { success: false, status: 401 };
-  }
+	const query = getUserFollowingQuery();
+	const statement = database.prepare(query);
+	const followings = statement.all(userId);
 
-  const user = findUser(users, userId);
-  const followers = user.followers;
-
-  return { success: true, followers, status: 200 };
+	return { success: true, status: 200, followings };
 };
 
-export const getUserFollowing = (userId, users, currentSession) => {
-  const isAuthorizedUser = currentSession.users.includes(userId);
+export const getUserStories = (database, userId) => {
+	const isAuthorizedUser = isAuthorized(database, userId);
 
-  if (!isAuthorizedUser) {
-    return { success: false, status: 401 };
-  }
+	if (!isAuthorizedUser) {
+		return { success: false, status: 401 };
+	}
 
-  const user = findUser(users, userId);
-  const followers = user.followers;
+	const stories = getStories(database, userId);
+	const drafts = getDrafts(database, userId);
 
-  return { success: true, followers, status: 200 };
+	return { success: true, status: 200, stories, drafts };
 };
 
-export const getUserStories = (userId, session, users) => {
-  const isAuthorizedUser = session.users.includes(userId);
-  if (!isAuthorizedUser) {
-    return { success: false, status: 401 };
-  }
+export const follow = (database, targetId, initiatorId) => {
+	if (targetId === initiatorId) {
+		return { success: false, status: 401 };
+	}
 
-  const user = findUser(users, userId);
+	if (doesFollowerExists(database, targetId, initiatorId)) {
+		return { success: false, status: 401 };
+	}
 
-  return { success: true, stories: user.stories, status: 200 };
+	const target = findUser(database, targetId);
+	if (!target) {
+		return { success: false, status: 404 };
+	}
+
+	const query = addFollowerQuery();
+	const statement = database.prepare(query);
+	statement.run(targetId, initiatorId);
+
+	return { success: true, status: 200 };
 };
 
-export const follow = (users, targetId, initiatorId) => {
-  const user = findUser(users, targetId);
-  if (!user) {
-    return { success: false, status: 404 };
-  }
+export const unfollow = (database, targetId, initiatorId) => {
+	const target = findUser(database, targetId);
+	if (!target) {
+		return { success: false, status: 404 };
+	}
 
-  addFollower(user.followers.length + 1, targetId, initiatorId, user);
+	if (!doesFollowerExists(database, targetId, initiatorId)) {
+		return { success: false, status: 401 };
+	}
 
-  const initiatorUser = findUser(users, initiatorId);
-  addFollowing(
-    initiatorUser.following.length + 1,
-    initiatorId,
-    targetId,
-    initiatorUser,
-  );
+	const query = removeFollowerQuery();
+	const statement = database.prepare(query);
+	statement.run(initiatorId);
 
-  return { success: true, status: 200 };
-};
-
-export const unfollow = (users, initiatorId, targetId) => {
-  const targetFollowers = findUser(users, targetId).followers;
-  const { success } = removeFromFollowers(targetFollowers, initiatorId);
-
-  if (!success) {
-    return { success, status: 404 };
-  }
-
-  const userFollowingList = findUser(users, initiatorId).following;
-  removeFromFollowing(userFollowingList, targetId);
-
-  return { success: true, status: 200 };
+	return { success: true, status: 200 };
 };

@@ -3,9 +3,14 @@ import { beforeEach, describe, it } from '@std/testing/bdd';
 import { DatabaseSync } from 'node:sqlite';
 import { initDB } from '../../src/db/init.js';
 import { login } from '../../src/handlers/common_handlers.js';
-import { follow } from '../../src/handlers/follow.js';
-import { unfollow } from '../../src/handlers/unfollow.js';
-import { getUserFollowers } from '../../src/handlers/user_followers.js';
+import { createStory } from '../../src/handlers/story_handler.js';
+import {
+	follow,
+	getUserFollowers,
+	getUserFollowing,
+	getUserStories,
+	unfollow,
+} from '../../src/handlers/user_handlers.js';
 
 describe('User Handlers', () => {
 	let database;
@@ -106,65 +111,134 @@ describe('User Handlers', () => {
 	});
 
 	describe('users following test', () => {
-		it(' => should return error if user is unauthorised', () => {
-			const mockSession = {
-				users: [],
-			};
+		it(' => should fail with unauthorized user', () => {
+			const { success, status } = getUserFollowing(database, 1);
 
-			const response = getUserFollowing(1, mockUsers, mockSession);
-			assertEquals(response.success, false);
-			assertEquals(response.status, 401);
+			assertEquals(success, false);
+			assertEquals(status, 401);
 		});
 
-		it(' => should return all followings if authorised', () => {
-			const mockSession = {
-				users: [1],
-			};
+		it(' => should return list of user followings', () => {
+			const initiator = login(database, 'deadpool');
+			const target = login(database, 'peter parker');
 
-			const response = getUserFollowing(1, mockUsers, mockSession);
-			assertEquals(response.success, true);
-			assertEquals(response.status, 200);
-			assertEquals(response.followers, []);
+			// deadpool is following peter parker
+			follow(database, target.userId, initiator.userId);
+
+			// get deadpool following list
+			const { followings, success, status } = getUserFollowing(
+				database,
+				initiator.userId,
+			);
+
+			assertEquals(success, true);
+			assertEquals(status, 200);
+			assertEquals(followings.length, 1);
 		});
 	});
 
-	describe.ignore('user stories tests', () => {
-		let mockUsers;
+	describe('user stories tests', () => {
+		it('=> success should fail when user is not authorized', () => {
+			const { success, status } = getUserStories(database, 1);
 
-		beforeEach(() => {
-			mockUsers = [
-				{
-					id: 1,
-					name: 'deadpool',
-					followers: [],
-					following: [],
-					stories: [
-						{
-							id: 1,
-							title: 'mock story',
-							content: 'mock content',
-						},
-					],
-				},
-			];
+			assertEquals(success, false);
+			assertEquals(status, 401);
 		});
 
-		it(' => should get all stories : ', () => {
-			const mockSession = { users: [1] };
+		it(' => should return all published and drafts of user', () => {
+			const { userId } = login(database, 'deadpool');
 
-			const actual = getUserStories(1, mockSession, mockUsers);
-			assertEquals(actual.stories.length, 1);
-			assertEquals(actual.success, true);
-			assertEquals(actual.status, 200);
+			const { success, status, stories, drafts } = getUserStories(
+				database,
+				userId,
+			);
+
+			assertEquals(success, true);
+			assertEquals(status, 200);
+			assertEquals(stories, []);
+			assertEquals(drafts, []);
 		});
 
-		it(' => should fail with unauthorized user', () => {
-			const session = {
-				users: [],
+		it(' => should return published stories after publishing a story', () => {
+			const { userId } = login(database, 'deadpool');
+
+			const story = {
+				title: 'title 1',
+				content: 'content 1',
+				authorId: userId,
+				isPublished: true,
 			};
-			const actual = getUserStories(1, session, mockUsers);
-			assertEquals(actual.success, false);
-			assertEquals(actual.status, 401);
+			createStory(database, story);
+
+			const { success, status, stories, drafts } = getUserStories(
+				database,
+				userId,
+			);
+
+			const { title, content, author_id } = stories[0];
+			assertEquals(success, true);
+			assertEquals(status, 200);
+			assertEquals(title, 'title 1');
+			assertEquals(content, 'content 1');
+			assertEquals(author_id, userId);
+			assertEquals(drafts, []);
+		});
+
+		it(' => should return drafts after creating a draft', () => {
+			const { userId } = login(database, 'deadpool');
+			const draft = {
+				title: 'title 1',
+				content: 'content 1',
+				authorId: userId,
+				isPublished: false,
+			};
+
+			createStory(database, draft);
+			const { success, status, stories, drafts } = getUserStories(
+				database,
+				userId,
+			);
+			const { title, content, author_id } = drafts[0];
+
+			assertEquals(success, true);
+			assertEquals(status, 200);
+			assertEquals(title, 'title 1');
+			assertEquals(content, 'content 1');
+			assertEquals(author_id, userId);
+			assertEquals(stories, []);
+		});
+
+		it(' => should return both drafts and published after creating them', () => {
+			const { userId } = login(database, 'deadpool');
+			const draft = {
+				title: 'title 1',
+				content: 'content 1',
+				authorId: userId,
+				isPublished: false,
+			};
+			const story = {
+				title: 'title 2',
+				content: 'content 1',
+				authorId: userId,
+				isPublished: true,
+			};
+
+			createStory(database, draft);
+			createStory(database, story);
+			const { success, status, stories, drafts } = getUserStories(
+				database,
+				userId,
+			);
+			assertEquals(success, true);
+			assertEquals(status, 200);
+
+			assertEquals(stories[0].title, 'title 2');
+			assertEquals(stories[0].content, 'content 1');
+			assertEquals(stories[0].author_id, userId);
+
+			assertEquals(drafts[0].title, 'title 1');
+			assertEquals(drafts[0].content, 'content 1');
+			assertEquals(drafts[0].author_id, userId);
 		});
 	});
 });

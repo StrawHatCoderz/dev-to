@@ -60,22 +60,23 @@ export const findStoryQuery = () => `
   FROM stories
   WHERE story_id = ?`;
 
-export const getFollowingQuery = () => `SELECT * FROM user 
-  INNER JOIN followers 
-  ON user.id = followers.user_id
-  WHERE followers.follower_id = ?`;
+export const getUserFollowingQuery = () => `
+  SELECT user_id, username
+  FROM user u
+  JOIN followers f
+  ON u.id = f.user_id
+  WHERE f.follower_id = ?`;
+
 export const getUserFollowersQuery = () => `
   SELECT follower_id, username
   FROM followers f
   JOIN user u
   ON u.id = f.user_id
-  WHERE user_id = ?
-`;
+  WHERE user_id = ?`;
 
 export const addFollowerQuery = () => `
   INSERT INTO followers(user_id, follower_id)
-  VALUES (?, ?)
-`;
+  VALUES (?, ?)`;
 
 export const isValidFollowerQuery = () => `
   SELECT 1
@@ -85,5 +86,14 @@ export const isValidFollowerQuery = () => `
 
 export const removeFollowerQuery = () => `
   DELETE FROM followers
-  WHERE user_id = ? AND follower_id = ?
-`;
+  WHERE user_id = ? AND follower_id = ?`;
+
+export const getPublishedStoriesQuery = () => `
+  SELECT story_id, title, content, author_id, is_published, created_on, updated_on
+  FROM stories
+  WHERE is_published = 1 AND author_id = (?)`;
+
+export const getUserDraftsQuery = () => `
+  SELECT story_id, title, content, author_id, is_published, created_on, updated_on
+  FROM stories
+  WHERE is_published = 0 AND author_id = (?)`;
