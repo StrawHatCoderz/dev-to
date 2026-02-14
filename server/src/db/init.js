@@ -8,6 +8,10 @@ export const initDB = (database) => {
       created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
+    INSERT INTO user(username) VALUES('deadpool');
+    INSERT INTO user(username) VALUES('peter parker');
+    INSERT INTO user(username) VALUES('bruce wayne');
+
     CREATE TABLE IF NOT EXISTS stories (
       story_id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT UNIQUE NOT NULL,

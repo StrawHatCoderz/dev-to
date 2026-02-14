@@ -13,7 +13,6 @@ describe('common handlers', () => {
 	beforeEach(() => {
 		database = new DatabaseSync(':memory:');
 		initDB(database);
-		database.exec("insert into user(username) values('deadpool')");
 	});
 
 	describe('login test cases', () => {

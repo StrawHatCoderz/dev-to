@@ -43,6 +43,12 @@ const insertIntoStories = (database, storyToCreate) => {
 	return statement.run(title, content, authorId, isPublished);
 };
 
+const insertIntoPublished = (database, storyId) => {
+	const query = addIntoPublishedStoriesQuery();
+	const statement = database.prepare(query);
+	return statement.run(storyId);
+};
+
 export const deleteStory = (database, storyId) => {
 	const story = findStory(database, storyId);
 	if (!story) {
@@ -52,12 +58,6 @@ export const deleteStory = (database, storyId) => {
 	removeRecord(database, storyId);
 
 	return { success: true, status: 200 };
-};
-
-const insertIntoPublished = (database, storyId) => {
-	const query = addIntoPublishedStoriesQuery();
-	const statement = database.prepare(query);
-	return statement.run(storyId);
 };
 
 export const createStory = (database, storyToCreate) => {

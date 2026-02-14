@@ -11,9 +11,6 @@ describe('handle common requests', () => {
 	beforeEach(() => {
 		database = new DatabaseSync(':memory:');
 		initDB(database);
-		database
-			.prepare("insert into user(username) values('deadpool') RETURNING id")
-			.get().id;
 	});
 
 	it(' => should route to login', async () => {
