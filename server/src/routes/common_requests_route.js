@@ -22,5 +22,8 @@ export const commonRequestRouter = ({ route, body }, database) => {
 		? router(database, body)
 		: { success: false, status: 404 };
 
-	return new Response(JSON.stringify(result));
+	return new Response(JSON.stringify(result), {
+		status: result.status,
+		headers: { 'content-type': 'application/json' },
+	});
 };

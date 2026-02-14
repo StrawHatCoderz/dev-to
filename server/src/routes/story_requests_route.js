@@ -56,5 +56,8 @@ export const storyRequestRouter = ({ route, body, params }, database) => {
 		? router(database, body, params)
 		: { success: false, status: 404 };
 
-	return new Response(JSON.stringify(result));
+	return new Response(JSON.stringify(result), {
+		status: result.status,
+		headers: { 'content-type': 'application/json' },
+	});
 };
