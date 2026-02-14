@@ -43,30 +43,24 @@ describe('common handlers', () => {
 
 	describe('logout test cases', () => {
 		it(' => should fail when user is not in session', () => {
-			const response = logout(database, 'deadpool');
+			const { userId } = login(database, 'deadpool');
+			logout(database, userId);
+			const response = logout(database, userId);
 			assertEquals(response.success, false);
 			assertEquals(response.status, 401);
 		});
 
 		it(' => should logout sucuessfully when user logged in ', () => {
-			login(database, 'deadpool');
-			const response = logout(database, 'deadpool');
+			const { userId } = login(database, 'deadpool');
+			const response = logout(database, userId);
 			assertEquals(response.success, true);
 			assertEquals(response.status, 200);
 		});
 	});
 
 	describe('stories test cases', () => {
-		it(' => should fail with unauthorized user', () => {
-			const response = getAllStories(database, 100);
-			assertEquals(response.success, false);
-			assertEquals(response.status, 401);
-		});
-
 		it(' => should return all stories', () => {
-			login(database, 'deadpool');
-
-			const response = getAllStories(database, 1);
+			const response = getAllStories(database);
 
 			assertEquals(response.success, true);
 			assertEquals(response.status, 200);
