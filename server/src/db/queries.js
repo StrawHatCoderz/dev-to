@@ -64,3 +64,15 @@ export const getFollowingQuery = () => `SELECT * FROM user
   INNER JOIN followers 
   ON user.id = followers.user_id
   WHERE followers.follower_id = ?`;
+export const getUserFollowersQuery = () => `
+  SELECT follower_id, username
+  FROM followers f
+  JOIN user u
+  ON u.id = f.user_id
+  WHERE user_id = ?
+`;
+
+export const addFollowerQuery = () => `
+  INSERT INTO followers(user_id, follower_id)
+  VALUES (?, ?)
+`;
