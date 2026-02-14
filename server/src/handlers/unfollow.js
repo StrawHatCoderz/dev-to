@@ -1,4 +1,4 @@
-import { addFollowerQuery, isValidFollowerQuery } from '../db/queries.js';
+import { isValidFollowerQuery, removeFollowerQuery } from '../db/queries.js';
 import { findUser } from '../utils.js';
 
 export const isValidFollower = (database, userId, followerId) => {
@@ -6,26 +6,22 @@ export const isValidFollower = (database, userId, followerId) => {
 	const statement = database.prepare(query);
 
 	const result = statement.get(userId, followerId);
-	return result === undefined;
+	return result !== undefined;
 };
 
-export const follow = (database, targetId, initiatorId) => {
-	if (targetId === initiatorId) {
-		return { success: false, status: 401 };
+export const unfollow = (database, targetId, initiatorId) => {
+	const target = findUser(database, targetId);
+	if (!target) {
+		return { success: false, status: 404 };
 	}
 
 	if (!isValidFollower(database, targetId, initiatorId)) {
 		return { success: false, status: 401 };
 	}
 
-	const target = findUser(database, targetId);
-	if (!target) {
-		return { success: false, status: 404 };
-	}
-
-	const query = addFollowerQuery();
+	const query = removeFollowerQuery();
 	const statement = database.prepare(query);
-	statement.run(targetId, initiatorId);
+	statement.run(initiatorId);
 
 	return { success: true, status: 200 };
 };

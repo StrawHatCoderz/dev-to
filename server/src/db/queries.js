@@ -72,3 +72,14 @@ export const addFollowerQuery = () => `
   INSERT INTO followers(user_id, follower_id)
   VALUES (?, ?)
 `;
+
+export const isValidFollowerQuery = () => `
+  SELECT 1
+  FROM followers
+  WHERE user_id = ? AND follower_id = ?
+  LIMIT 1`;
+
+export const removeFollowerQuery = () => `
+  DELETE FROM followers
+  WHERE user_id = ? AND follower_id = ?
+`;

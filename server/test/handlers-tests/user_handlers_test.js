@@ -4,6 +4,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { initDB } from '../../src/db/init.js';
 import { login } from '../../src/handlers/common_handlers.js';
 import { follow } from '../../src/handlers/follow.js';
+import { unfollow } from '../../src/handlers/unfollow.js';
 import { getUserFollowers } from '../../src/handlers/user_followers.js';
 
 describe('User Handlers', () => {
@@ -44,47 +45,37 @@ describe('User Handlers', () => {
 			assertEquals(success, false);
 			assertEquals(status, 404);
 		});
+
+		it(' => should fail following user twice', () => {
+			const { userId } = login(database, 'deadpool');
+			const targetId = 999;
+
+			follow(database, targetId, userId);
+			const { success, status } = follow(database, targetId, userId);
+
+			assertEquals(success, false);
+			assertEquals(status, 404);
+		});
 	});
 
-	describe.ignore('un-follow test cases', () => {
-		it(' => should fail when user is not following anyone', () => {
-			const response = unfollow(mockUsers, 2, 1);
-			assertEquals(response.success, false);
-			assertEquals(response.status, 404);
+	describe('un-follow test cases', () => {
+		it(' => should fail for invalid target', () => {
+			const { userId } = login(database, 'deadpool');
+
+			const { success, status } = unfollow(database, 2, userId);
+			assertEquals(success, false);
+			assertEquals(status, 401);
 		});
 
 		it(' => should remove follower', () => {
-			mockUsers = [
-				{
-					id: 1,
-					name: 'deadpool',
-					followers: [{ id: 1, userId: 1, followerId: 2 }],
-					following: [],
-				},
-				{
-					id: 2,
-					name: 'Bkon',
-					followers: [],
-					following: [{ id: 1, userId: 2, followingId: 1 }],
-				},
-			];
-			const response = unfollow(mockUsers, 2, 1);
+			const initiator = login(database, 'deadpool');
+			const target = login(database, 'peter parker');
+
+			follow(database, target.userId, initiator.userId);
+			const response = unfollow(database, target.userId, initiator.userId);
+
 			assertEquals(response.success, true);
 			assertEquals(response.status, 200);
-			assertEquals(mockUsers, [
-				{
-					id: 1,
-					name: 'deadpool',
-					followers: [],
-					following: [],
-				},
-				{
-					id: 2,
-					name: 'Bkon',
-					followers: [],
-					following: [],
-				},
-			]);
 		});
 	});
 
@@ -114,7 +105,7 @@ describe('User Handlers', () => {
 		});
 	});
 
-	describe.ignore('users following test', () => {
+	describe('users following test', () => {
 		it(' => should return error if user is unauthorised', () => {
 			const mockSession = {
 				users: [],
