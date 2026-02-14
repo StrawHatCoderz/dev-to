@@ -11,9 +11,6 @@ describe('route story requests', () => {
 	beforeEach(() => {
 		database = new DatabaseSync(':memory:');
 		initDB(database);
-		database
-			.prepare("insert into user(username) values('deadpool') RETURNING id")
-			.get().id;
 	});
 
 	it(' => should route to create story route', async () => {
@@ -99,7 +96,7 @@ describe('route story requests', () => {
 		assertEquals(story.title, 'title 1');
 	});
 
-	it.ignore(' => should route comments route (get comments)', async () => {
+	it(' => should route comments route (get comments)', async () => {
 		const requestInfo = {
 			route: 'comments',
 			body: {

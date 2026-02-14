@@ -1,3 +1,4 @@
-dev-to.db
+.gitignore
+dev_to.db
 coverage
 .vscode

@@ -1,6 +1,9 @@
 {
   "tasks": {
-    "dev": "deno run --watch main.ts"
+    "start": "deno run -A server/main.js",
+    "start:live": "deno run -A --watch server/main.js",
+    "test": "deno test --watch -A",
+    "setup": "deno run -A server/setup.js"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@^1.0.18",

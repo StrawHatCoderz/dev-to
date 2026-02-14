@@ -1,44 +1,53 @@
 import { commonRequestRouter } from '../routes/common_requests_route.js';
-import { handleStoryRequests } from '../routes/story_requests_route.js';
+import { storyRequestRouter } from '../routes/story_requests_route.js';
 import { handleUserRequest } from '../routes/user_requests_route.js';
+import { logRequest } from '../utils.js';
 
-const parseCommonRequest = async (pathname, method, request) => {
+const isCommonRoute = (route) => {
+	const commonRoutes = ['login', 'logout', 'stories'];
+	return commonRoutes.includes(route);
+};
+
+const parseCommonRequest = async (request) => {
+	const pathname = new URL(request.url).pathname;
+	const { method } = request;
 	const [_, route, ...params] = pathname.split('/');
 	return method === 'POST'
 		? { route, params: [], body: await request.json() }
 		: { route, body: {}, params };
 };
 
-const parseRequest = async (pathname, method, request) => {
-	const [_, __, route, params] = pathname.split('/');
+const parseRequest = async (request) => {
+	const pathname = new URL(request.url).pathname;
+	const { method } = request;
+	const [_, __, route, ...params] = pathname.split('/');
 	return method === 'POST'
 		? { route, params: [], body: await request.json() }
 		: { route, body: {}, params };
 };
 
-const commonRoutes = ['login', 'logout', 'stories'];
-
 export const requestHandler = async (request, database) => {
-	let response;
 	const pathname = new URL(request.url).pathname;
-	const [_, route] = pathname.split('/');
+	const [_, rootRoute] = pathname.split('/');
 
-	if (commonRoutes.includes(route)) {
-		const requestInfo = await parseCommonRequest(
-			pathname,
-			request.method,
-			request,
-		);
-		response = await commonRequestRouter(requestInfo, database);
-	} else if (route === 'story') {
-		const requestInfo = await parseRequest(pathname, request.method, request);
-		response = await handleStoryRequests(requestInfo);
-	} else if (route === 'user') {
-		const requestInfo = await parseRequest(pathname, request.method, request);
-		response = await handleUserRequest(requestInfo);
-	} else {
-		response = 'Invalid Request';
+	logRequest(request.method, pathname);
+	if (isCommonRoute(rootRoute)) {
+		const requestInfo = await parseCommonRequest(request);
+		return commonRequestRouter(requestInfo, database);
 	}
 
-	return new Response(response);
+	if (rootRoute === 'story') {
+		const requestInfo = await parseRequest(request);
+		return storyRequestRouter(requestInfo);
+	}
+
+	if (rootRoute === 'user') {
+		const requestInfo = await parseRequest(request);
+		return handleUserRequest(requestInfo);
+	}
+
+	return new Response(JSON.stringify({ error: 'Not Found' }), {
+		status: 404,
+		headers: { 'content-type': 'application/json' },
+	});
 };
