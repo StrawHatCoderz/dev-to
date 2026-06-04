@@ -34,13 +34,14 @@ const removeRecord = (database, storyId) => {
 	return statement.run(storyId);
 };
 
-const insertIntoStories = (database, storyToCreate) => {
-	const { title, content, authorId, isPublished } = storyToCreate;
+const insertIntoStories = (database, story) => {
+	const { title, content, authorId, isPublished } = story;
+	const isStoryPublished = isPublished ? '1' : '0';
 
 	const query = addStoryQuery();
 	const statement = database.prepare(query);
 
-	return statement.run(title, content, authorId, isPublished);
+	return statement.run(title, content, authorId, isStoryPublished);
 };
 
 const insertIntoPublished = (database, storyId) => {
@@ -48,6 +49,11 @@ const insertIntoPublished = (database, storyId) => {
 	const statement = database.prepare(query);
 	return statement.run(storyId);
 };
+
+const isValidStoryContent = (title, content) =>
+	title.trim().length !== 0 && content.trim().length !== 0;
+
+const shouldPublish = (isPublished) => isPublished;
 
 export const deleteStory = (database, storyId) => {
 	const story = findStory(database, storyId);
@@ -60,19 +66,16 @@ export const deleteStory = (database, storyId) => {
 	return { success: true, status: 200 };
 };
 
-export const createStory = (database, storyToCreate) => {
-	const { title, content } = storyToCreate;
-	const isValidContent = ![content.trim().length, title.trim().length].includes(
-		0,
-	);
+export const createStory = (database, story) => {
+	const { title, content } = story;
 
-	if (!isValidContent) {
+	if (!isValidStoryContent(title, content)) {
 		return { success: false, status: 400 };
 	}
 
-	storyToCreate.isPublished = storyToCreate.isPublished ? '1' : '0';
-	const { lastInsertRowid } = insertIntoStories(database, storyToCreate);
-	if (parseInt(storyToCreate.isPublished)) {
+	const { lastInsertRowid } = insertIntoStories(database, story);
+	console.log(story);
+	if (shouldPublish(story.isPublished)) {
 		insertIntoPublished(database, lastInsertRowid);
 	}
 

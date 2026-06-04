@@ -6,17 +6,26 @@ import {
 	unfollow,
 } from '../handlers/user_handlers.js';
 
-export const handleUserRequest = ({ route, body, params }) => {
-	switch (route) {
-		case 'follow':
-			return follow(database, body.targetId, body.initiatorId);
-		case 'unfollow':
-			return unfollow(database, body.targetId, body.initiatorId);
-		case 'stories':
-			return getUserStories(database, params[0]); //params[0] is userId
-		case 'get-followers':
-			return getUserFollowers(database, params[0]);
-		case 'get-following':
-			return getUserFollowing(database, params[0]);
-	}
+export const userRequestRouter = ({ route, body, params }, database) => {
+	const routes = {
+		follow: (database, body) =>
+			follow(database, body.targetId, body.initiatorId),
+		unfollow: (database, body) =>
+			unfollow(database, body.targetId, body.initiatorId),
+		stories: (database, _body, params) => getUserStories(database, params[0]),
+		followers: (database, _body, params) =>
+			getUserFollowers(database, params[0]),
+		following: (database, _body, params) =>
+			getUserFollowing(database, params[0]),
+	};
+
+	const router = routes[route];
+	const result = router
+		? router(database, body, params)
+		: { success: false, status: 404 };
+
+	return new Response(JSON.stringify(result), {
+		status: result.status,
+		headers: { 'content-type': 'application/json' },
+	});
 };

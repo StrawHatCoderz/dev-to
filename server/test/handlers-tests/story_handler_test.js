@@ -146,13 +146,16 @@ describe('story handlers', () => {
 		});
 	});
 
-	describe('create story tests ', () => {
+	describe.only('create story tests ', () => {
 		it(' => should return all story details', () => {
-			const { success, status, storyId } = createStory(database, {
-				title: 'title 2',
+			const story = {
+				title: 'title 1',
 				content: 'sample content',
 				authorId: userId,
-			});
+				isPublished: false,
+			};
+
+			const { success, status, storyId } = createStory(database, story);
 
 			assertEquals(status, 200);
 			assertEquals(success, true);

@@ -1,6 +1,6 @@
 import { commonRequestRouter } from '../routes/common_requests_route.js';
 import { storyRequestRouter } from '../routes/story_requests_route.js';
-import { handleUserRequest } from '../routes/user_requests_route.js';
+import { userRequestRouter } from '../routes/user_requests_route.js';
 import { logRequest } from '../utils.js';
 
 const isCommonRoute = (route) => {
@@ -38,12 +38,12 @@ export const requestHandler = async (request, database) => {
 
 	if (rootRoute === 'story') {
 		const requestInfo = await parseRequest(request);
-		return storyRequestRouter(requestInfo);
+		return storyRequestRouter(requestInfo, database);
 	}
 
 	if (rootRoute === 'user') {
 		const requestInfo = await parseRequest(request);
-		return handleUserRequest(requestInfo);
+		return userRequestRouter(requestInfo, database);
 	}
 
 	return new Response(JSON.stringify({ error: 'Not Found' }), {
